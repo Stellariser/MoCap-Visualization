@@ -9,6 +9,7 @@ public class Simulator : MonoBehaviour
 {
     public GameObject cathTop, cathTL, cathTR, cathBL, cathBR,
                     skullTL, skullTR, skullBL, skullBR, skullBrow; //references to marker spheres
+    public GameObject point1Sphere, point2Sphere, catheder;
     float timeToCall;
     float timeDelay = 1.0f; //the code will be run every 2 seconds
     const string separator = "\t"; //tab separation string
@@ -91,6 +92,21 @@ public class Simulator : MonoBehaviour
             if (index >= fileSize) readyToUpdate = false; //stop simulation if eod is reached
 
             timeToCall = Time.fixedTime + timeDelay;
+
+
+            //map catheder
+            Vector3 Top = new Vector3(x1, y1, z1);
+            Vector3 TL = new Vector3(x2, y2, z2);
+            Vector3 TR = new Vector3(x3, y3, z3);
+            Vector3 BL = new Vector3(x4, y4, z4);
+            Vector3 BR = new Vector3(x5, y5, z5);
+            Vector3 point1 = Vector3.Project(Top - TL, TR - TL) + TL;
+            point1Sphere.transform.position = point1;
+            Vector3 point2 = Vector3.Project(Top - BL, BR - BL) + BL;
+            point2Sphere.transform.position = point2;
+            catheder.transform.position = point1;
+            catheder.transform.LookAt(point2);
+
         }
     }
 
