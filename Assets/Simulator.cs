@@ -9,7 +9,7 @@ public class Simulator : MonoBehaviour
 {
     public GameObject cathTop, cathTL, cathTR, cathBL, cathBR,
                     skullTL, skullTR, skullBL, skullBR, skullBrow; //references to marker spheres
-    public GameObject point1Sphere, point2Sphere, catheder;
+    public GameObject point1Sphere, point2Sphere, catheder, skull;
     float timeToCall;
     float timeDelay = 1.0f; //the code will be run every 2 seconds
     const string separator = "\t"; //tab separation string
@@ -106,6 +106,15 @@ public class Simulator : MonoBehaviour
             point2Sphere.transform.position = point2;
             catheder.transform.position = point1;
             catheder.transform.LookAt(point2);
+
+            //map skull
+            Vector3 brow = new Vector3(x10, y10, z10);
+            Vector3 skullL = new Vector3(x6, y6, z6);
+            Vector3 skullR = new Vector3(x7, y7, z7);
+            skull.transform.position = skullL;
+            skull.transform.LookAt(skullR);
+            skull.transform.position = brow;
+
 
         }
     }
