@@ -16,6 +16,7 @@ public class Simulator : MonoBehaviour
     string path = "Assets/catheter008.txt"; //path to tsv file
     int index, fileSize, loopIndex=0, stopIndex=2; //index to cycle through arrays
     bool readyToUpdate;
+   public GameObject loopingCanvas;
 
     //arrays with data from each row
     float[] field, time;
@@ -78,7 +79,8 @@ public class Simulator : MonoBehaviour
             {
                 index = 0; //stop simulation if eod is reached
                 loopIndex++;
-                //TODO Display UI
+                loopingCanvas.SetActive(true);
+                Invoke("disableLoopCanvas", 2);
             }
             Normalize();
             index++;
@@ -270,5 +272,9 @@ public class Simulator : MonoBehaviour
     private void ChangeSpeed()
     {
         timeDelay = slider.value;
+    }
+    public void disableLoopCanvas()
+    {
+        loopingCanvas.SetActive(false);
     }
 }
