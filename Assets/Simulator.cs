@@ -158,7 +158,6 @@ public class Simulator : MonoBehaviour
 
 
         }
-        else Debug.Log("nope");
 
     }
 

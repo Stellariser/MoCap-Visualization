@@ -977,6 +977,15 @@ MonoBehaviour:
   skull: {fileID: 1398889102}
   parent: {fileID: 1042571529}
   loopingCanvas: {fileID: 2047926337}
+  tutorialscene: {fileID: 0}
+  scene1: {fileID: 0}
+  scene2: {fileID: 0}
+  scene3: {fileID: 0}
+  scene4: {fileID: 0}
+  scene5: {fileID: 0}
+  ChooseSceneUI: {fileID: 0}
+  SceneIsOverUI: {fileID: 0}
+  AreyourRedyUI: {fileID: 0}
   slider: {fileID: 2031703441}
 --- !u!4 &1406889823
 Transform:
@@ -1905,6 +1914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 274820443}
+  plane: {fileID: 2047926337}
 --- !u!1 &2047926337
 GameObject:
   m_ObjectHideFlags: 0
