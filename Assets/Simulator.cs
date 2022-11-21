@@ -15,6 +15,10 @@ public class Simulator : MonoBehaviour
     string path = "Assets/catheter008.txt"; //path to tsv file
     int index, fileSize; //index to cycle through arrays
     bool readyToUpdate;
+    bool pause = false; // if the playing of the recording is to be paused.
+    public GameObject tutorialscene, scene1,scene2,scene3,scene4,scene5;
+    public GameObject ChooseSceneUI,SceneIsOverUI,AreyourRedyUI;
+   
 
     //arrays with data from each row
     float[] field, time;
@@ -28,9 +32,27 @@ public class Simulator : MonoBehaviour
 
     public Slider slider; //slider to control the animation speed
 
+    //public Array chooseScene [][][]
+
     // Start is called before the first frame update
     void Start()
     {
+
+        chooseStream();
+    }
+
+    // interface for choosing the right path
+    private void chooseStream(){
+      
+        // here comes the call to reveal the interface but do we want the user to 
+
+
+        // Training scene
+        startStream(path);
+
+    }
+
+   private void startStream(string filepath) {
         //initialize indexes
         index = fileSize = 0;
         readyToUpdate = false;
@@ -39,7 +61,7 @@ public class Simulator : MonoBehaviour
 
         timeToCall = Time.fixedTime + timeDelay;
 
-        StreamReader sr = ReadFile(path); //read from file
+        StreamReader sr = ReadFile(filepath); //read from file
         fileSize = FindSize(sr); //find size of file
 
         //initialize arrays
@@ -64,13 +86,22 @@ public class Simulator : MonoBehaviour
         readyToUpdate = true;
 
         //close reader
-        sr.Close();
+        //sr.Close();
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate)
+        // to pause and restart the process
+        if (Input.GetKeyUp(KeyCode.X))
+        {
+            print("pressing on x");
+            if (pause == false) { pause = true; } 
+            else { pause = false; }
+        }
+
+        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause== false)
         {
             //normalize positions
             Normalize();
