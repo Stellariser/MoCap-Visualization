@@ -14,7 +14,7 @@ public class Simulator : MonoBehaviour
     float timeDelay = 1.0f; //the code will be run every 2 seconds
     const string separator = "\t"; //tab separation string
     string path = "Assets/catheter008.txt"; //path to tsv file
-    int index, fileSize; //index to cycle through arrays
+    int index, fileSize, loopIndex=0, stopIndex=2; //index to cycle through arrays
     bool readyToUpdate;
 
     //arrays with data from each row
@@ -71,11 +71,18 @@ public class Simulator : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate)
+        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate&&loopIndex<stopIndex)
         {
             //normalize positions
+            if (index >= fileSize)
+            {
+                index = 0; //stop simulation if eod is reached
+                loopIndex++;
+                //TODO Display UI
+            }
             Normalize();
-
+            index++;
+           
             //update marker positions
             cathTop.transform.localPosition = new Vector3(x1, y1, z1);
             cathTL.transform.localPosition = new Vector3(x2, y2, z2);
@@ -88,8 +95,7 @@ public class Simulator : MonoBehaviour
             skullBR.transform.localPosition = new Vector3(x9, y9, z9);
             skullBrow.transform.localPosition = new Vector3(x10, y10, z10);
 
-            index++;
-            if (index >= fileSize) readyToUpdate = false; //stop simulation if eod is reached
+         
 
             timeToCall = Time.fixedTime + timeDelay;
 
@@ -117,6 +123,8 @@ public class Simulator : MonoBehaviour
 
 
         }
+        else Debug.Log("nope");
+
     }
 
     //method to normalize coordinates in Unity scene
