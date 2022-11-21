@@ -9,11 +9,12 @@ public class Simulator : MonoBehaviour
 {
     public GameObject cathTop, cathTL, cathTR, cathBL, cathBR,
                     skullTL, skullTR, skullBL, skullBR, skullBrow; //references to marker spheres
+    public GameObject point1Sphere, point2Sphere, catheder, skull, parent;
     float timeToCall;
     float timeDelay = 1.0f; //the code will be run every 2 seconds
     const string separator = "\t"; //tab separation string
     string path = "Assets/catheter008.txt"; //path to tsv file
-    int index, fileSize; //index to cycle through arrays
+    int index, fileSize, loopIndex=0, stopIndex=2; //index to cycle through arrays
     bool readyToUpdate;
     bool pause = false; // if the playing of the recording is to be paused.
     public GameObject tutorialscene, scene1,scene2,scene3,scene4,scene5;
@@ -93,6 +94,7 @@ public class Simulator : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
         // to pause and restart the process
         if (Input.GetKeyUp(KeyCode.X))
         {
@@ -101,28 +103,61 @@ public class Simulator : MonoBehaviour
             else { pause = false; }
         }
 
-        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause== false)
+        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause== false&&loopIndex<stopIndex)
+
         {
             //normalize positions
+            if (index >= fileSize)
+            {
+                index = 0; //stop simulation if eod is reached
+                loopIndex++;
+                //TODO Display UI
+            }
             Normalize();
-
-            //update marker positions
-            cathTop.transform.position = new Vector3(x1, y1, z1);
-            cathTL.transform.position = new Vector3(x2, y2, z2);
-            cathTR.transform.position = new Vector3(x3, y3, z3);
-            cathBL.transform.position = new Vector3(x4, y4, z4);
-            cathBR.transform.position = new Vector3(x5, y5, z5);
-            skullTL.transform.position = new Vector3(x6, y6, z6);
-            skullTR.transform.position = new Vector3(x7, y7, z7);
-            skullBL.transform.position = new Vector3(x8, y8, z8);
-            skullBR.transform.position = new Vector3(x9, y9, z9);
-            skullBrow.transform.position = new Vector3(x10, y10, z10);
-
             index++;
-            if (index >= fileSize) readyToUpdate = false; //stop simulation if eod is reached
+           
+            //update marker positions
+            cathTop.transform.localPosition = new Vector3(x1, y1, z1);
+            cathTL.transform.localPosition = new Vector3(x2, y2, z2);
+            cathTR.transform.localPosition = new Vector3(x3, y3, z3);
+            cathBL.transform.localPosition = new Vector3(x4, y4, z4);
+            cathBR.transform.localPosition = new Vector3(x5, y5, z5);
+            skullTL.transform.localPosition = new Vector3(x6, y6, z6);
+            skullTR.transform.localPosition = new Vector3(x7, y7, z7);
+            skullBL.transform.localPosition = new Vector3(x8, y8, z8);
+            skullBR.transform.localPosition = new Vector3(x9, y9, z9);
+            skullBrow.transform.localPosition = new Vector3(x10, y10, z10);
+
+         
 
             timeToCall = Time.fixedTime + timeDelay;
+
+
+            //map catheder
+            Vector3 Top = new Vector3(x1, y1, z1);
+            Vector3 TL = new Vector3(x2, y2, z2);
+            Vector3 TR = new Vector3(x3, y3, z3);
+            Vector3 BL = new Vector3(x4, y4, z4);
+            Vector3 BR = new Vector3(x5, y5, z5);
+            Vector3 point1 = Vector3.Project(Top - TL, TR - TL) + TL;
+            point1Sphere.transform.localPosition = point1;
+            Vector3 point2 = Vector3.Project(Top - BL, BR - BL) + BL;
+            point2Sphere.transform.localPosition = point2;
+            catheder.transform.localPosition = point1;
+            catheder.transform.LookAt(parent.transform.TransformPoint(point2));
+
+            //map skull
+            Vector3 brow = new Vector3(x10, y10, z10);
+            Vector3 skullL = new Vector3(x6, y6, z6);
+            Vector3 skullR = new Vector3(x7, y7, z7);
+            skull.transform.localPosition = skullL;
+            skull.transform.LookAt(parent.transform.TransformPoint(skullR));
+            skull.transform.localPosition = brow;
+
+
         }
+        else Debug.Log("nope");
+
     }
 
     //method to normalize coordinates in Unity scene
