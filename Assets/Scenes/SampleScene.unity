@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1045,6 +1045,7 @@ MonoBehaviour:
   catheder: {fileID: 304312396}
   skull: {fileID: 1398889102}
   parent: {fileID: 1042571529}
+  path: Assets/MoCapData/catheter008.txt
   loopingCanvas: {fileID: 1642404915}
   tutorialscene: {fileID: 0}
   scene1: {fileID: 0}
