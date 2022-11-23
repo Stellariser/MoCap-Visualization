@@ -146,6 +146,9 @@ public class Simulator : MonoBehaviour
             Vector3 point2 = Vector3.Project(Top - BL, BR - BL) + BL;
             point2Sphere.transform.localPosition = point2;
             catheder.transform.localPosition = point1;
+
+            // Quaternion lookOnLook = Quaternion.LookRotation(parent.transform.TransformPoint(point2) - catheder.transform.position);
+            // catheder.transform.rotation = Quaternion.Slerp(catheder.transform.rotation, lookOnLook, Time.deltaTime);
             catheder.transform.LookAt(parent.transform.TransformPoint(point2));
 
             //map skull
@@ -299,6 +302,15 @@ public class Simulator : MonoBehaviour
 
             line = reader.ReadLine();
         }
+
+        // Applying average filter on each catheter array
+        cathTip = AverageFilter(cathTip, 1000);
+        cathTopLeft = AverageFilter(cathTopLeft, 1000);
+        cathTopRight = AverageFilter(cathTopRight, 1000);
+        cathBottomLeft = AverageFilter(cathBottomLeft, 1000);
+        cathBottomRight = AverageFilter(cathBottomRight, 1000);
+
+
     }
 
     private void ChangeSpeed()
@@ -308,5 +320,35 @@ public class Simulator : MonoBehaviour
     public void disableLoopCanvas()
     {
         loopingCanvas.SetActive(false);
+    }
+
+    // A method that applies average filtering to an array of floats
+    private float[,] AverageFilter(float[,] array, int iterations)
+    {
+        float[,] filteredArray = array;
+        for (int j = iterations; j > 0; j--) {
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                if (i == 0)
+                {
+                    filteredArray[i,0] = filteredArray[i + 1,0];
+                    filteredArray[i,1] = filteredArray[i + 1,1];
+                    filteredArray[i,2] = filteredArray[i + 1,2];
+                }
+                else if (i > array.GetLength(0) - 6)
+                {
+                    filteredArray[i,0] = filteredArray[array.GetLength(0) - 5,0];
+                    filteredArray[i,1] = filteredArray[array.GetLength(0) - 5,1];
+                    filteredArray[i,2] = filteredArray[array.GetLength(0) - 5,2];
+                }
+                else
+                {
+                    filteredArray[i,0] = (filteredArray[i-1,0] + filteredArray[i,0] + filteredArray[i + 1,0]) / 3;
+                    filteredArray[i,1] = (filteredArray[i-1,1] + filteredArray[i,1] + filteredArray[i + 1,1]) / 3;
+                    filteredArray[i,2] = (filteredArray[i-1,2] + filteredArray[i,2] + filteredArray[i + 1,2]) / 3;
+                }
+            }
+        }
+        return filteredArray;
     }
 }
