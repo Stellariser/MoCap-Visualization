@@ -34,6 +34,9 @@ public class Simulator : MonoBehaviour
 
     public Slider slider; //slider to control the animation speed
 
+    // Boolean to apply the average filter to the data
+    public bool applyAverageFilter = false;
+
     //public Array chooseScene [][][]
 
     // Start is called before the first frame update
@@ -304,11 +307,13 @@ public class Simulator : MonoBehaviour
         }
 
         // Applying average filter on each catheter array
-        cathTip = AverageFilter(cathTip, 1000);
-        cathTopLeft = AverageFilter(cathTopLeft, 1000);
-        cathTopRight = AverageFilter(cathTopRight, 1000);
-        cathBottomLeft = AverageFilter(cathBottomLeft, 1000);
-        cathBottomRight = AverageFilter(cathBottomRight, 1000);
+        if (applyAverageFilter) {
+            cathTip = AverageFilter(cathTip, 100);
+            cathTopLeft = AverageFilter(cathTopLeft, 100);
+            cathTopRight = AverageFilter(cathTopRight, 100);
+            cathBottomLeft = AverageFilter(cathBottomLeft, 100);
+            cathBottomRight = AverageFilter(cathBottomRight, 100);
+        }
 
 
     }
@@ -337,9 +342,9 @@ public class Simulator : MonoBehaviour
                 }
                 else if (i > array.GetLength(0) - 6)
                 {
-                    filteredArray[i,0] = filteredArray[array.GetLength(0) - 5,0];
-                    filteredArray[i,1] = filteredArray[array.GetLength(0) - 5,1];
-                    filteredArray[i,2] = filteredArray[array.GetLength(0) - 5,2];
+                    filteredArray[i,0] = filteredArray[array.GetLength(0) - 6,0];
+                    filteredArray[i,1] = filteredArray[array.GetLength(0) - 6,1];
+                    filteredArray[i,2] = filteredArray[array.GetLength(0) - 6,2];
                 }
                 else
                 {
