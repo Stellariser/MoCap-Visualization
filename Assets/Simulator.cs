@@ -11,12 +11,12 @@ public class Simulator : MonoBehaviour
                     skullTL, skullTR, skullBL, skullBR, skullBrow; //references to marker spheres
     public GameObject point1Sphere, point2Sphere, catheder, skull, parent;
     float timeToCall;
-    float timeDelay = 1.0f; //the code will be run every 2 seconds
+    float timeDelay = 0.05f; //the code will be run every 2 seconds - this was 1 before the user test
     const string separator = "\t"; //tab separation string
-    string path = "Assets/catheter008.txt"; //path to tsv file
+    public string path = "Assets/MoCapData/catheter008.txt"; //path to tsv file
     int index, fileSize, loopIndex=0, stopIndex=2; //index to cycle through arrays
     bool readyToUpdate;
-   public GameObject loopingCanvas;
+    public GameObject loopingCanvas;
     bool pause = false; // if the playing of the recording is to be paused.
     public GameObject tutorialscene, scene1,scene2,scene3,scene4,scene5;
     public GameObject ChooseSceneUI,SceneIsOverUI,AreyourRedyUI;
