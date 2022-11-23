@@ -18,8 +18,14 @@ public class Simulator : MonoBehaviour
     bool readyToUpdate;
     public GameObject loopingCanvas;
     bool pause = false; // if the playing of the recording is to be paused.
-    public GameObject tutorialscene, scene1,scene2,scene3,scene4,scene5;
+    // Buttons for the UI
+    public Button tutorialscene, scene1,scene2,scene3, readyButton,sceneOverButton;
+    // the different screens used
     public GameObject ChooseSceneUI,SceneIsOverUI,AreyourRedyUI;
+    // call animator for catheter
+    public GameObject catheterAnimatioon;
+
+
    
 
     //arrays with data from each row
@@ -37,25 +43,28 @@ public class Simulator : MonoBehaviour
     // Boolean to apply the average filter to the data
     public bool applyAverageFilter = false;
 
+    // if animation is going on
+    public bool isanimation = false;
+
     //public Array chooseScene [][][]
 
     // Start is called before the first frame update
     void Start()
     {
+       // tutorialscene, scene1,scene2,scene3
 
-        chooseStream();
+        tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; });
+        scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; }); // Real data
+        scene2.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; }); // // augmented data
+        scene3.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); isanimation = true; }); // fabricated data
+        readyButton.onClick.AddListener(() => { if (isanimation == false) { AreyourRedyUI.SetActive(false); startStream(path); loopIndex = 0; } else { AreyourRedyUI.SetActive(false); catheterAnimatioon.SetActive(true); } });
+        sceneOverButton.onClick.AddListener(() => { SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true); });
+        //chooseStream();
+        // Engage interface 
+        
+
     }
 
-    // interface for choosing the right path
-    private void chooseStream(){
-      
-        // here comes the call to reveal the interface but do we want the user to 
-
-
-        // Training scene
-        startStream(path);
-
-    }
 
    private void startStream(string filepath) {
         //initialize indexes
@@ -91,7 +100,8 @@ public class Simulator : MonoBehaviour
         readyToUpdate = true;
 
         //close reader
-        //sr.Close();
+        sr.Close();
+       
 
     }
 
@@ -106,6 +116,11 @@ public class Simulator : MonoBehaviour
             if (pause == false) { pause = true; } 
             else { pause = false; }
         }
+        if (loopIndex == stopIndex) {
+            SceneIsOverUI.SetActive(true);
+            loopIndex++;
+            
+        }
 
         if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause== false&&loopIndex<stopIndex)
 
@@ -113,10 +128,12 @@ public class Simulator : MonoBehaviour
             //normalize positions
             if (index >= fileSize)
             {
+               
                 index = 0; //stop simulation if eod is reached
                 loopIndex++;
                 loopingCanvas.SetActive(true);
                 Invoke("disableLoopCanvas", 2);
+                
             }
             Normalize();
             index++;
