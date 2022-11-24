@@ -514,6 +514,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4418696645263075538, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
   m_PrefabInstance: {fileID: 4418696645933265347}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &683091305 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8387473375929419144, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+  m_PrefabInstance: {fileID: 8387473375008008861}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &683091308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683091305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 184ea34e8b4a14a4d955b6a839167b13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &735513551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,12 +1385,15 @@ MonoBehaviour:
   scene1: {fileID: 0}
   scene2: {fileID: 0}
   scene3: {fileID: 0}
-  scene4: {fileID: 0}
-  scene5: {fileID: 0}
+  readyButton: {fileID: 0}
+  sceneOverButton: {fileID: 0}
   ChooseSceneUI: {fileID: 0}
   SceneIsOverUI: {fileID: 0}
   AreyourRedyUI: {fileID: 0}
+  catheterAnimatioon: {fileID: 0}
   slider: {fileID: 2031703441}
+  applyAverageFilter: 0
+  isanimation: 0
 --- !u!4 &1406889823
 Transform:
   m_ObjectHideFlags: 0
