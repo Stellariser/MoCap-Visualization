@@ -531,6 +531,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 184ea34e8b4a14a4d955b6a839167b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLoops: 2
+  loopingCanvas: {fileID: 1642404915}
 --- !u!1 &735513551
 GameObject:
   m_ObjectHideFlags: 0
@@ -6181,31 +6183,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.18787245
+      value: 0.18050115
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2116159
+      value: 1.2695607
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.40810496
+      value: -0.38591966
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.74256366
+      value: 0.68015957
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.42560735
+      value: 0.4760921
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4486884
+      value: -0.45666406
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.25716993
+      value: 0.3196517
       objectReference: {fileID: 0}
     - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
