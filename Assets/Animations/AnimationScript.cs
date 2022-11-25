@@ -5,6 +5,7 @@ public class AnimationScript : MonoBehaviour
     public int maxLoops = 2;
     private int currentLoops = 0;
     public GameObject loopingCanvas;
+    public GameObject simulationManager;
 
     public void counter()
     {
@@ -12,6 +13,7 @@ public class AnimationScript : MonoBehaviour
         if (maxLoops <= currentLoops)
         {
             gameObject.GetComponent<Animator>().enabled = false;
+            simulationManager.GetComponent<Simulator>().StopAnimation();
         }
         else
         {
