@@ -134,7 +134,7 @@ public class Simulator : MonoBehaviour
             SceneIsOverUI.SetActive(true);
             loopIndex++;
             player.GetComponent<BlurController>().DisableBlur();
-
+            catheder.SetActive(false);
         }
         if (OVRInput.GetDown(OVRInput.Button.Three)){
             player.GetComponent<BlurController>().RecalibrateBlurPosition();
@@ -146,6 +146,7 @@ public class Simulator : MonoBehaviour
                 tutorialCatheterAnimation.SetActive(true);
             } else {
                 AreyourRedyUI.SetActive(false);
+                catheder.SetActive(true);
                 startStream(path);
                 loopIndex = 0;
             }
