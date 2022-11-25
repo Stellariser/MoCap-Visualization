@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.12107852, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -328,7 +328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.48
+      value: 0.0089999875
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalPosition.y
@@ -336,11 +336,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.47
+      value: -0.7699999
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalRotation.x
@@ -348,7 +348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalRotation.z
@@ -360,7 +360,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -516,6 +516,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 418476495}
   m_CullTransparentMesh: 1
+--- !u!1001 &426556870
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1042571530}
+    m_Modifications:
+    - target: {fileID: 8387473375929419144, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_Name
+      value: AnimatedCatheter
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419144, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.18787245
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.2116159
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.40810496
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.74256366
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.42560735
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.4486884
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.25716993
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387473375929419147, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+--- !u!1 &572710894 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8387473375929419144, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+  m_PrefabInstance: {fileID: 426556870}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &599763906 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4418696645356575233, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
@@ -1129,7 +1195,7 @@ MonoBehaviour:
   ChooseSceneUI: {fileID: 2772892447097440276}
   SceneIsOverUI: {fileID: 2772892446666072319}
   AreyourRedyUI: {fileID: 2772892446307382613}
-  catheterAnimatioon: {fileID: 0}
+  catheterAnimatioon: {fileID: 572710894}
   slider: {fileID: 2772892446206032182}
   applyAverageFilter: 0
   isanimation: 0
