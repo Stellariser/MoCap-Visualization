@@ -109,6 +109,12 @@ public class Simulator : MonoBehaviour
 
     }
 
+    public void StopAnimation() {
+        loopIndex = stopIndex;
+        catheterAnimatioon.SetActive(false);
+        tutorialCatheterAnimation.SetActive(false);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {

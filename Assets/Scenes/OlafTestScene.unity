@@ -527,6 +527,10 @@ PrefabInstance:
       propertyPath: loopingCanvas
       value: 
       objectReference: {fileID: 2047926337}
+    - target: {fileID: -8182630080912314616, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: simulationManager
+      value: 
+      objectReference: {fileID: 1406889821}
     - target: {fileID: 7092697353415681128, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1057,6 +1061,10 @@ PrefabInstance:
       propertyPath: loopingCanvas
       value: 
       objectReference: {fileID: 2047926337}
+    - target: {fileID: -8182630080912314616, guid: 5330266473c1249639644675c655aeed, type: 3}
+      propertyPath: simulationManager
+      value: 
+      objectReference: {fileID: 1406889821}
     - target: {fileID: 7092697353415681128, guid: 5330266473c1249639644675c655aeed, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1161,7 +1169,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071200483}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1696,7 +1704,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2047926338
 RectTransform:
   m_ObjectHideFlags: 0
