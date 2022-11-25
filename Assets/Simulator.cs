@@ -138,7 +138,7 @@ public class Simulator : MonoBehaviour
             player.GetComponent<BlurController>().DisableBlur();
             catheder.SetActive(false);
         }
-        if (OVRInput.GetDown(OVRInput.Button.Two)){
+        if (OVRInput.GetDown(OVRInput.Button.Three)){
             player.GetComponent<BlurController>().RecalibrateBlurPosition();
             if (isanimation) {
                 AreyourRedyUI.SetActive(false); 
