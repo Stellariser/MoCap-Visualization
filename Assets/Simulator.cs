@@ -14,19 +14,19 @@ public class Simulator : MonoBehaviour
     float timeDelay = 0.05f; //the code will be run every 2 seconds - this was 1 before the user test
     const string separator = "\t"; //tab separation string
     public string path = "Assets/MoCapData/catheter008.txt"; //path to tsv file
-    int index, fileSize, loopIndex=0, stopIndex=2; //index to cycle through arrays
+    int index, fileSize, loopIndex = 0, stopIndex = 2; //index to cycle through arrays
     bool readyToUpdate;
     public GameObject loopingCanvas;
     bool pause = false; // if the playing of the recording is to be paused.
     // Buttons for the UI
-    public Button tutorialscene, scene1,scene2,scene3, readyButton,sceneOverButton;
+    public Button tutorialscene, scene1, scene2, scene3, readyButton, sceneOverButton;
     // the different screens used
-    public GameObject ChooseSceneUI,SceneIsOverUI,AreyourRedyUI;
+    public GameObject ChooseSceneUI, SceneIsOverUI, AreyourRedyUI;
     // call animator for catheter
     public GameObject catheterAnimatioon;
 
 
-   
+
 
     //arrays with data from each row
     float[] field, time;
@@ -51,22 +51,22 @@ public class Simulator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // tutorialscene, scene1,scene2,scene3
+        // tutorialscene, scene1,scene2,scene3
 
         tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; });
         scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; }); // Real data
         scene2.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; }); // // augmented data
         scene3.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); isanimation = true; }); // fabricated data
-        readyButton.onClick.AddListener(() => { if (isanimation == false) { AreyourRedyUI.SetActive(false); startStream(path); loopIndex = 0; } else { AreyourRedyUI.SetActive(false); catheterAnimatioon.SetActive(true); } });
         sceneOverButton.onClick.AddListener(() => { SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true); });
         //chooseStream();
         // Engage interface 
-        
+
 
     }
 
 
-   private void startStream(string filepath) {
+    private void startStream(string filepath)
+    {
         //initialize indexes
         index = fileSize = 0;
         readyToUpdate = false;
@@ -101,7 +101,7 @@ public class Simulator : MonoBehaviour
 
         //close reader
         sr.Close();
-       
+
 
     }
 
@@ -113,31 +113,44 @@ public class Simulator : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.X))
         {
             print("pressing on x");
-            if (pause == false) { pause = true; } 
+            if (pause == false) { pause = true; }
             else { pause = false; }
         }
-        if (loopIndex == stopIndex) {
+        if (loopIndex == stopIndex)
+        {
             SceneIsOverUI.SetActive(true);
             loopIndex++;
-            
+
+        }
+        if (OVRInput.GetDown(OVRInput.Button.Three)){
+            if (isanimation == false)
+            {
+                AreyourRedyUI.SetActive(false);
+                startStream(path);
+                loopIndex = 0;
+            }
+            else { 
+                AreyourRedyUI.SetActive(false); 
+                catheterAnimatioon.SetActive(true); }
         }
 
-        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause== false&&loopIndex<stopIndex)
+
+        if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause == false && loopIndex < stopIndex)
 
         {
             //normalize positions
             if (index >= fileSize)
             {
-               
+
                 index = 0; //stop simulation if eod is reached
                 loopIndex++;
                 loopingCanvas.SetActive(true);
                 Invoke("disableLoopCanvas", 2);
-                
+
             }
             Normalize();
             index++;
-           
+
             //update marker positions
             cathTop.transform.localPosition = new Vector3(x1, y1, z1);
             cathTL.transform.localPosition = new Vector3(x2, y2, z2);
@@ -150,7 +163,7 @@ public class Simulator : MonoBehaviour
             skullBR.transform.localPosition = new Vector3(x9, y9, z9);
             skullBrow.transform.localPosition = new Vector3(x10, y10, z10);
 
-         
+
 
             timeToCall = Time.fixedTime + timeDelay;
 
@@ -198,7 +211,7 @@ public class Simulator : MonoBehaviour
         x8 = headBottomLeft[index, 0] / 1000.0f;
         x9 = headBottomRight[index, 0] / 1000.0f;
         x10 = headBrow[index, 0] / 1000.0f;
-        
+
         //y coordinate
         y1 = cathTip[index, 1] / 1000.0f;
         y2 = cathTopLeft[index, 1] / 1000.0f;
@@ -210,7 +223,7 @@ public class Simulator : MonoBehaviour
         y8 = headBottomLeft[index, 1] / 1000.0f;
         y9 = headBottomRight[index, 1] / 1000.0f;
         y10 = headBrow[index, 1] / 1000.0f;
-        
+
         //z coordinate
         z1 = cathTip[index, 2] / 1000.0f;
         z2 = cathTopLeft[index, 2] / 1000.0f;
@@ -258,7 +271,7 @@ public class Simulator : MonoBehaviour
     private void Extract(StreamReader reader)
     {
         string line;
-        for (int i = 0; i < 5; i++) 
+        for (int i = 0; i < 5; i++)
             line = reader.ReadLine(); //skip headers
         line = reader.ReadLine(); //first line
 
@@ -270,8 +283,8 @@ public class Simulator : MonoBehaviour
 
             //populate arrays
             field[runtimeField] = runtimeField + 1.0f;
-            time[runtimeField] = runtimeField/100.0f;
-            
+            time[runtimeField] = runtimeField / 100.0f;
+
             //marker tree attached to the skull
             headTopLeft[runtimeField, 0] = float.Parse(temp[2]); //skull 1 x
             headTopLeft[runtimeField, 1] = float.Parse(temp[4]); //skull 1 y
@@ -285,7 +298,7 @@ public class Simulator : MonoBehaviour
             headBottomRight[runtimeField, 0] = float.Parse(temp[11]); //skull 4 x
             headBottomRight[runtimeField, 1] = float.Parse(temp[13]); //skull 4 y
             headBottomRight[runtimeField, 2] = float.Parse(temp[12]); //skull 4 z
-            
+
             /* calibration marker on burr hole is always 0
             headHole[runtimeField, 0] = float.Parse(temp[14]); //burr hole x
             headHole[runtimeField, 1] = float.Parse(temp[16]); //burr hole y
@@ -296,7 +309,7 @@ public class Simulator : MonoBehaviour
             headBrow[runtimeField, 0] = float.Parse(temp[17]); //skull brow x
             headBrow[runtimeField, 1] = float.Parse(temp[19]); //skull brow y
             headBrow[runtimeField, 2] = float.Parse(temp[18]); //skull brow z
-            
+
             //marker tree attached to the catheter
             cathTip[runtimeField, 0] = float.Parse(temp[20]); //catheter 1 x
             cathTip[runtimeField, 1] = float.Parse(temp[22]); //catheter 1 y
@@ -313,7 +326,7 @@ public class Simulator : MonoBehaviour
             cathBottomRight[runtimeField, 0] = float.Parse(temp[32]); //catheter 5 x
             cathBottomRight[runtimeField, 1] = float.Parse(temp[34]); //catheter 5 y
             cathBottomRight[runtimeField, 2] = float.Parse(temp[33]); //catheter 5 z
-            
+
             /* calibration marker on catheter tip is always 0
             cathEnd[runtimeField, 0] = float.Parse(temp[32]); //catheter tip x
             cathEnd[runtimeField, 1] = float.Parse(temp[34]); //catheter tip y
@@ -324,7 +337,8 @@ public class Simulator : MonoBehaviour
         }
 
         // Applying average filter on each catheter array
-        if (applyAverageFilter) {
+        if (applyAverageFilter)
+        {
             cathTip = AverageFilter(cathTip, 100);
             cathTopLeft = AverageFilter(cathTopLeft, 100);
             cathTopRight = AverageFilter(cathTopRight, 100);
@@ -348,26 +362,27 @@ public class Simulator : MonoBehaviour
     private float[,] AverageFilter(float[,] array, int iterations)
     {
         float[,] filteredArray = array;
-        for (int j = iterations; j > 0; j--) {
+        for (int j = iterations; j > 0; j--)
+        {
             for (int i = 0; i < array.GetLength(0); i++)
             {
                 if (i == 0)
                 {
-                    filteredArray[i,0] = filteredArray[i + 1,0];
-                    filteredArray[i,1] = filteredArray[i + 1,1];
-                    filteredArray[i,2] = filteredArray[i + 1,2];
+                    filteredArray[i, 0] = filteredArray[i + 1, 0];
+                    filteredArray[i, 1] = filteredArray[i + 1, 1];
+                    filteredArray[i, 2] = filteredArray[i + 1, 2];
                 }
                 else if (i > array.GetLength(0) - 6)
                 {
-                    filteredArray[i,0] = filteredArray[array.GetLength(0) - 6,0];
-                    filteredArray[i,1] = filteredArray[array.GetLength(0) - 6,1];
-                    filteredArray[i,2] = filteredArray[array.GetLength(0) - 6,2];
+                    filteredArray[i, 0] = filteredArray[array.GetLength(0) - 6, 0];
+                    filteredArray[i, 1] = filteredArray[array.GetLength(0) - 6, 1];
+                    filteredArray[i, 2] = filteredArray[array.GetLength(0) - 6, 2];
                 }
                 else
                 {
-                    filteredArray[i,0] = (filteredArray[i-1,0] + filteredArray[i,0] + filteredArray[i + 1,0]) / 3;
-                    filteredArray[i,1] = (filteredArray[i-1,1] + filteredArray[i,1] + filteredArray[i + 1,1]) / 3;
-                    filteredArray[i,2] = (filteredArray[i-1,2] + filteredArray[i,2] + filteredArray[i + 1,2]) / 3;
+                    filteredArray[i, 0] = (filteredArray[i - 1, 0] + filteredArray[i, 0] + filteredArray[i + 1, 0]) / 3;
+                    filteredArray[i, 1] = (filteredArray[i - 1, 1] + filteredArray[i, 1] + filteredArray[i + 1, 1]) / 3;
+                    filteredArray[i, 2] = (filteredArray[i - 1, 2] + filteredArray[i, 2] + filteredArray[i + 1, 2]) / 3;
                 }
             }
         }
