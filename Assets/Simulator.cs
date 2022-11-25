@@ -26,6 +26,9 @@ public class Simulator : MonoBehaviour
     public GameObject catheterAnimatioon;
     public GameObject tutorialCatheterAnimation;
 
+    // Player
+    public GameObject player;
+
 
 
 
@@ -57,8 +60,8 @@ public class Simulator : MonoBehaviour
     {
         // tutorialscene, scene1,scene2,scene3
 
-        tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false;isTutorial = true;  });
-        scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false;isTutorial = false;  }); // Real data
+        tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = true;});
+        scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; isTutorial = false; }); // Real data
         scene2.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = false; }); // // augmented data
         scene3.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); isanimation = true;isTutorial = false;  }); // fabricated data
         //chooseStream();
@@ -132,37 +135,23 @@ public class Simulator : MonoBehaviour
             Invoke("sceneOver", 10);
 
             loopIndex++;
-
+            player.GetComponent<BlurController>().DisableBlur();
+            catheder.SetActive(false);
         }
         if (OVRInput.GetDown(OVRInput.Button.Three)){
-            Debug.Log("Button 3 pressed");
+            player.GetComponent<BlurController>().RecalibrateBlurPosition();
             if (isanimation) {
-                Debug.Log("Animation is on");
                 AreyourRedyUI.SetActive(false); 
                 catheterAnimatioon.SetActive(true); 
             } else if (isTutorial) {
-                Debug.Log("Tutorial is on");
                 AreyourRedyUI.SetActive(false);
                 tutorialCatheterAnimation.SetActive(true);
             } else {
-                Debug.Log("Animation is off");
                 AreyourRedyUI.SetActive(false);
+                catheder.SetActive(true);
                 startStream(path);
                 loopIndex = 0;
             }
-            // if (isanimation == false && isTutorial == false)
-            // {
-            //     AreyourRedyUI.SetActive(false);
-            //     startStream(path);
-            //     loopIndex = 0;
-            // }
-            // else if (isanimation) { 
-            //     AreyourRedyUI.SetActive(false); 
-            //     catheterAnimatioon.SetActive(true); 
-            // } else {
-            //     AreyourRedyUI.SetActive(false);
-            //     tutorialCatheterAnimation.SetActive(true);
-            // }
         }
 
 
@@ -175,8 +164,10 @@ public class Simulator : MonoBehaviour
 
                 index = 0; //stop simulation if eod is reached
                 loopIndex++;
-                loopingCanvas.SetActive(true);
-                Invoke("disableLoopCanvas", 2);
+                if (loopIndex < stopIndex) {
+                    loopingCanvas.SetActive(true);
+                    Invoke("disableLoopCanvas", 2);
+                }
 
             }
             Normalize();
