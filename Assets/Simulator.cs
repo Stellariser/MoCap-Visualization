@@ -57,14 +57,14 @@ public class Simulator : MonoBehaviour
         scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; }); // Real data
         scene2.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; }); // // augmented data
         scene3.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); isanimation = true; }); // fabricated data
-        sceneOverButton.onClick.AddListener(() => { SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true); });
         //chooseStream();
         // Engage interface 
 
 
     }
-
-
+    void sceneOver() {
+             SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true);
+    }
     private void startStream(string filepath)
     {
         //initialize indexes
@@ -119,6 +119,8 @@ public class Simulator : MonoBehaviour
         if (loopIndex == stopIndex)
         {
             SceneIsOverUI.SetActive(true);
+            Invoke("sceneOver", 10);
+
             loopIndex++;
 
         }
