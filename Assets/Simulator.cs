@@ -161,8 +161,10 @@ public class Simulator : MonoBehaviour
 
                 index = 0; //stop simulation if eod is reached
                 loopIndex++;
-                loopingCanvas.SetActive(true);
-                Invoke("disableLoopCanvas", 2);
+                if (loopIndex < stopIndex) {
+                    loopingCanvas.SetActive(true);
+                    Invoke("disableLoopCanvas", 2);
+                }
 
             }
             Normalize();
