@@ -523,6 +523,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1042571530}
     m_Modifications:
+    - target: {fileID: 7092697353415681128, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1c6f5da569e51174d8f350b95ff5d696, type: 2}
     - target: {fileID: 8387473375929419144, guid: d4c5898ab6e854a9a88b90d7493743e9, type: 3}
       propertyPath: m_Name
       value: AnimatedCatheter
@@ -2694,7 +2698,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2772892446109755542}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.88}
+  m_LocalPosition: {x: 0, y: 0, z: -1.88}
   m_LocalScale: {x: 0.93374985, y: 0.93374985, z: 0.93374985}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2924,7 +2928,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2772892446206032168}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2936,7 +2940,7 @@ RectTransform:
   - {fileID: 2772892447585806199}
   m_Father: {fileID: 2772892446109755538}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.78, y: 0}
@@ -3244,7 +3248,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2772892446307382613}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 0
@@ -3253,7 +3257,7 @@ RectTransform:
   - {fileID: 2772892448130661234}
   m_Father: {fileID: 2772892446109755538}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.00000023841858, y: 0}
@@ -3560,7 +3564,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2772892446666072319}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.7}
   m_LocalScale: {x: 0.0005, y: 0.0005, z: 0.0005}
   m_ConstrainProportionsScale: 0
@@ -3569,7 +3573,7 @@ RectTransform:
   - {fileID: 418476496}
   m_Father: {fileID: 2772892446109755538}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.00000023841858, y: -0.075000286}
@@ -4330,7 +4334,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2772892447097440276}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
@@ -4338,7 +4342,7 @@ RectTransform:
   - {fileID: 2772892446496881171}
   m_Father: {fileID: 2772892446109755538}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.00000023841858, y: 0}
@@ -5180,7 +5184,7 @@ PrefabInstance:
     - target: {fileID: 3123885169044826075, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 603bd4612ead8a343b5ae837c5e7a760, type: 2}
+      objectReference: {fileID: 2100000, guid: 1c6f5da569e51174d8f350b95ff5d696, type: 2}
     - target: {fileID: 4418696645263075538, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
       propertyPath: m_IsActive
       value: 0
