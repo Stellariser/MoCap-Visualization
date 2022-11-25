@@ -78,7 +78,7 @@ public class Simulator : MonoBehaviour
         index = fileSize = 0;
         readyToUpdate = false;
 
-        slider.onValueChanged.AddListener(delegate { ChangeSpeed(); });
+      //  slider.onValueChanged.AddListener(delegate { ChangeSpeed(); });
 
         timeToCall = Time.fixedTime + timeDelay;
 
@@ -138,7 +138,7 @@ public class Simulator : MonoBehaviour
             player.GetComponent<BlurController>().DisableBlur();
             catheder.SetActive(false);
         }
-        if (OVRInput.GetDown(OVRInput.Button.Three)){
+        if (OVRInput.GetDown(OVRInput.Button.Two)){
             player.GetComponent<BlurController>().RecalibrateBlurPosition();
             if (isanimation) {
                 AreyourRedyUI.SetActive(false); 
