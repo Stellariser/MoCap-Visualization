@@ -30,7 +30,7 @@ public class Simulator : MonoBehaviour
     public GameObject player;
 
 
-
+    public DataManager dataManager;
 
     //arrays with data from each row
     float[] field, time;
@@ -70,7 +70,8 @@ public class Simulator : MonoBehaviour
 
     }
     void sceneOver() {
-             SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true);
+        SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true);
+        dataManager.endDataRecording();
     }
     private void startStream(string filepath)
     {
@@ -138,8 +139,10 @@ public class Simulator : MonoBehaviour
             player.GetComponent<BlurController>().DisableBlur();
             catheder.SetActive(false);
         }
-        if (OVRInput.GetDown(OVRInput.Button.Three)){
-            player.GetComponent<BlurController>().RecalibrateBlurPosition();
+        if (OVRInput.GetDown(OVRInput.Button.Three) && AreyourRedyUI.activeInHierarchy){
+            if (!isTutorial)
+                dataManager.startDataRecording(isanimation, applyAverageFilter);
+            player.GetComponent<BlurController>().RecalibrateBlurPosition();           
             if (isanimation) {
                 AreyourRedyUI.SetActive(false); 
                 catheterAnimatioon.SetActive(true); 

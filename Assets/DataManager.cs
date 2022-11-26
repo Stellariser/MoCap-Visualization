@@ -6,27 +6,38 @@ using System;
 
 public class DataManager : MonoBehaviour
 {
-    public Transform catheterTip, catheder;
+    public Transform catheterTip, catheterTipAnimated, catheder;
     public GameObject planeObj;
     bool movementDirDown = true;
+    bool isAnimation;
     Plane plane;
     float prevPos;
-    List<dataEntry> data = new List<dataEntry>();
+    List<dataEntry> data;
+    List<dataEntry> condition1 = new List<dataEntry>(); //smoothed
+    List<dataEntry> condition2 = new List<dataEntry>(); //real data
+    List<dataEntry> condition3 = new List<dataEntry>(); //animation
+
+    string startTime;
+    bool started;
     struct dataEntry
-    {       
+    {
+        public string condition;
         public float dist;
-        public bool movDir;
+        public string movDir;
         public string timestamp;
 
-        public dataEntry(float dist, bool movDir, string timestamp)
+        public dataEntry(float dist, bool movDir, string timestamp, string condition = "")
         {
             this.dist = dist;
-            this.movDir = movDir;
+            this.movDir = movDir?"down":"up";
             this.timestamp = timestamp;
+            this.condition = condition;
         }
         public string getAsString()
         {
-            return dist + ";" + movDir + ";" + timestamp;
+            if(condition=="")
+            return dist + ";" + movDir + ";" + timestamp+"; ";
+            else return " ;;"+timestamp+";" + condition;
         }
     }
 
@@ -41,19 +52,40 @@ public class DataManager : MonoBehaviour
             plane = new Plane(normal, planeObj.transform.position);
         }
         InvokeRepeating("calcDir", 1, 1);
+        startTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
     }
 
-    // Update is called once per frame
+    public void startDataRecording(bool isAnimation, bool isAveraged)
+    {
+        started = true;
+        int condition = getConditionNumber(isAnimation, isAveraged);
+        this.isAnimation = isAnimation;
+        data = isAnimation ? condition3 : isAveraged ? condition1 : condition2;
+        data.Add(new dataEntry(0, false, getTime(),"Category "+ condition));
+    }
+    public void endDataRecording()
+    {
+        data.Add(new dataEntry(0, false, getTime(), "endOfCondition"));
+    }
+    int getConditionNumber(bool isAnimation, bool isAveraged)
+    {
+        return isAnimation ? 3 : isAveraged ? 1 : 2;
+    }
     void Update()
     {
 
-        if (OVRInput.GetDown(OVRInput.Button.One) || Input.GetKeyDown("a"))
+        if (OVRInput.GetDown(OVRInput.Button.One)&&started)
         {
-            Debug.Log("button pressed");
-            Debug.Log(plane.GetDistanceToPoint(catheterTip.position));
-            data.Add(new dataEntry(plane.GetDistanceToPoint(catheterTip.position), movementDirDown, getTime()));
+        
+            data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation?catheterTipAnimated.position: catheterTip.position), movementDirDown, getTime()));
+            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
+            Invoke("stopVibration", 0.2f);
         }
 
+    }
+    void stopVibration()
+    {
+        OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
     }
     string getTime()
     {
@@ -62,9 +94,16 @@ public class DataManager : MonoBehaviour
     //TODO needs more stable Implementation once we decided on the data
     void calcDir()
     {
-        movementDirDown = catheterTip.position.y - prevPos < 0;
-        prevPos = catheterTip.position.y;
-        Debug.Log(movementDirDown);
+        if (!isAnimation)
+        {
+            movementDirDown = catheterTip.position.y - prevPos < 0;
+            prevPos = catheterTip.position.y;
+        }
+        else
+        {
+            movementDirDown = catheterTipAnimated.position.y - prevPos < 0;
+            prevPos = catheterTipAnimated.position.y;
+        }
     }
     private void OnDestroy()
     {
@@ -73,12 +112,15 @@ public class DataManager : MonoBehaviour
 
     void WriteData()
     {
-
+       
         StringBuilder sb = new StringBuilder();
-        for (int index = 0; index < data.Count; index++)
-            sb.AppendLine(data[index].getAsString());
-        print(Application.dataPath);
-        string filePath = Application.dataPath + "/results" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".csv";
+        for (int index = 0; index < condition1.Count; index++)
+            sb.AppendLine(condition1[index].getAsString());
+        for (int index = 0; index < condition2.Count; index++)
+            sb.AppendLine(condition2[index].getAsString());
+        for (int index = 0; index < condition3.Count; index++)
+            sb.AppendLine(condition3[index].getAsString());
+        string filePath = Application.persistentDataPath + "/results" + startTime + ".csv";
 
         StreamWriter outStream = File.CreateText(filePath);
         outStream.WriteLine(sb);
