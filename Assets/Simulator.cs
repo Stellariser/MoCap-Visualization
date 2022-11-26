@@ -388,6 +388,12 @@ public class Simulator : MonoBehaviour
     private float[,] AverageFilter(float[,] array, int iterations)
     {
         float[,] filteredArray = array;
+        Debug.Log("filteredArray[array.GetLength(0) - 6, 0] = " + filteredArray[array.GetLength(0) - 6, 0]);
+        Debug.Log("filteredArray[array.GetLength(0) - 5, 0] = " + filteredArray[array.GetLength(0) - 5, 0]);
+        Debug.Log("filteredArray[array.GetLength(0) - 6, 1] = " + filteredArray[array.GetLength(0) - 6, 1]);
+        Debug.Log("filteredArray[array.GetLength(0) - 5, 1] = " + filteredArray[array.GetLength(0) - 5, 1]);
+        Debug.Log("filteredArray[array.GetLength(0) - 6, 2] = " + filteredArray[array.GetLength(0) - 6, 2]);
+        Debug.Log("filteredArray[array.GetLength(0) - 5, 2] = " + filteredArray[array.GetLength(0) - 5, 2]);
         for (int j = iterations; j > 0; j--)
         {
             for (int i = 0; i < array.GetLength(0); i++)
@@ -398,7 +404,7 @@ public class Simulator : MonoBehaviour
                     filteredArray[i, 1] = filteredArray[i + 1, 1];
                     filteredArray[i, 2] = filteredArray[i + 1, 2];
                 }
-                else if (i > array.GetLength(0) - 6)
+                else if (i > array.GetLength(0) - 7)
                 {
                     filteredArray[i, 0] = filteredArray[array.GetLength(0) - 6, 0];
                     filteredArray[i, 1] = filteredArray[array.GetLength(0) - 6, 1];

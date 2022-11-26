@@ -36,7 +36,7 @@ public class BlurController : MonoBehaviour
     void Update() {
         if (_blurIsActive) {
             // check if camera position is within 0.3f of the original position
-            if (Vector3.Distance(camera.transform.position, _cameraPosition) > 0.2f) {
+            if (Vector3.Distance(camera.transform.position, _cameraPosition) > 0.1f) {
                 //Enable the plane
                 plane.SetActive(true);
             } else {
