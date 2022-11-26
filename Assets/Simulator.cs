@@ -13,7 +13,7 @@ public class Simulator : MonoBehaviour
     float timeToCall;
     float timeDelay = 0.05f; //the code will be run every 2 seconds - this was 1 before the user test
     const string separator = "\t"; //tab separation string
-    public string path = "Assets/MoCapData/catheter008.txt"; //path to tsv file
+    public string path = "catheter008.txt"; //path to tsv file
     int index, fileSize, loopIndex = 0, stopIndex = 2; //index to cycle through arrays
     bool readyToUpdate;
     public GameObject loopingCanvas;
@@ -59,7 +59,7 @@ public class Simulator : MonoBehaviour
     void Start()
     {
         // tutorialscene, scene1,scene2,scene3
-
+        BetterStreamingAssets.Initialize();
         tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = true;});
         scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; isTutorial = false; }); // Real data
         scene2.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = false; }); // // augmented data
@@ -82,8 +82,8 @@ public class Simulator : MonoBehaviour
       //  slider.onValueChanged.AddListener(delegate { ChangeSpeed(); });
 
         timeToCall = Time.fixedTime + timeDelay;
+        StreamReader sr = BetterStreamingAssets.OpenText("catheter008.txt"); //read from file
 
-        StreamReader sr = ReadFile(filepath); //read from file
         fileSize = FindSize(sr); //find size of file
 
         //initialize arrays
