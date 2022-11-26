@@ -17,7 +17,7 @@ public class DataManager : MonoBehaviour
     List<dataEntry> condition2 = new List<dataEntry>(); //real data
     List<dataEntry> condition3 = new List<dataEntry>(); //animation
 
-    string startTime;
+    public string startTime;
     bool started;
     struct dataEntry
     {
@@ -29,20 +29,21 @@ public class DataManager : MonoBehaviour
         public dataEntry(float dist, bool movDir, string timestamp, string condition = "")
         {
             this.dist = dist;
-            this.movDir = movDir?"down":"up";
+            this.movDir = movDir ? "down" : "up";
             this.timestamp = timestamp;
             this.condition = condition;
         }
         public string getAsString()
         {
-            if(condition=="")
-            return dist + ";" + movDir + ";" + timestamp+"; ";
-            else return " ;;"+timestamp+";" + condition;
+            if (condition == "")
+                return dist + ";" + movDir + ";" + timestamp + "; ";
+            else return " ;;" + timestamp + ";" + condition;
         }
     }
 
     void Start()
     {
+        Debug.LogWarning("test");
         var filter = planeObj.GetComponent<MeshFilter>();
         Vector3 normal;
 
@@ -52,7 +53,6 @@ public class DataManager : MonoBehaviour
             plane = new Plane(normal, planeObj.transform.position);
         }
         InvokeRepeating("calcDir", 1, 1);
-        startTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
     }
 
     public void startDataRecording(bool isAnimation, bool isAveraged)
@@ -61,7 +61,7 @@ public class DataManager : MonoBehaviour
         int condition = getConditionNumber(isAnimation, isAveraged);
         this.isAnimation = isAnimation;
         data = isAnimation ? condition3 : isAveraged ? condition1 : condition2;
-        data.Add(new dataEntry(0, false, getTime(),"Category "+ condition));
+        data.Add(new dataEntry(0, false, getTime(), "Category " + condition));
     }
     public void endDataRecording()
     {
@@ -74,12 +74,23 @@ public class DataManager : MonoBehaviour
     void Update()
     {
 
-        if (OVRInput.GetDown(OVRInput.Button.One)&&started)
+        if (OVRInput.GetDown(OVRInput.Button.One) && started)
         {
-        
-            data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation?catheterTipAnimated.position: catheterTip.position), movementDirDown, getTime()));
+
+            data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation ? catheterTipAnimated.position : catheterTip.position), movementDirDown, getTime()));
             OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
             Invoke("stopVibration", 0.2f);
+        }
+        if (OVRInput.GetDown(OVRInput.Button.Four))
+        {
+            WriteData();
+            data = new List<dataEntry>();
+            condition1 = new List<dataEntry>(); //smoothed
+            condition2 = new List<dataEntry>(); //real data
+            condition3 = new List<dataEntry>(); //animation
+            started = false;
+
+
         }
 
     }
@@ -105,14 +116,11 @@ public class DataManager : MonoBehaviour
             prevPos = catheterTipAnimated.position.y;
         }
     }
-    private void OnDestroy()
-    {
-        WriteData();
-    }
+
 
     void WriteData()
     {
-       
+
         StringBuilder sb = new StringBuilder();
         for (int index = 0; index < condition1.Count; index++)
             sb.AppendLine(condition1[index].getAsString());
@@ -121,7 +129,7 @@ public class DataManager : MonoBehaviour
         for (int index = 0; index < condition3.Count; index++)
             sb.AppendLine(condition3[index].getAsString());
         string filePath = Application.persistentDataPath + "/results" + startTime + ".csv";
-
+        Debug.LogWarning(Application.persistentDataPath);
         StreamWriter outStream = File.CreateText(filePath);
         outStream.WriteLine(sb);
         outStream.Close();

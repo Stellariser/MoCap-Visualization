@@ -147,6 +147,7 @@ public class Simulator : MonoBehaviour
                 AreyourRedyUI.SetActive(false); 
                 catheterAnimatioon.SetActive(true); 
             } else if (isTutorial) {
+                dataManager.startTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 AreyourRedyUI.SetActive(false);
                 tutorialCatheterAnimation.SetActive(true);
             } else {
