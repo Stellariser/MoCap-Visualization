@@ -74,10 +74,10 @@ public class DataManager : MonoBehaviour
     void Update()
     {
 
-        if (OVRInput.GetDown(OVRInput.Button.One) && started)
+        if (OVRInput.GetDown(OVRInput.Button.One))
         {
-
-            data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation ? catheterTipAnimated.position : catheterTip.position), movementDirDown, getTime()));
+            if(started)
+                data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation ? catheterTipAnimated.position : catheterTip.position), movementDirDown, getTime()));
             OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
             Invoke("stopVibration", 0.2f);
         }
