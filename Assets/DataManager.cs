@@ -6,7 +6,7 @@ using System;
 
 public class DataManager : MonoBehaviour
 {
-    public Transform catheterTip, catheterTipAnimated, catheder;
+    public Transform catheterTip, catheterTop, catheterTipAnimated, catheterTopAnimated, catheder;
     public GameObject planeObj;
     bool movementDirDown = true;
     bool isAnimation;
@@ -16,6 +16,7 @@ public class DataManager : MonoBehaviour
     List<dataEntry> condition1 = new List<dataEntry>(); //smoothed
     List<dataEntry> condition2 = new List<dataEntry>(); //real data
     List<dataEntry> condition3 = new List<dataEntry>(); //animation
+    public LayerMask planeMask;
 
     public string startTime;
     bool started;
@@ -24,11 +25,13 @@ public class DataManager : MonoBehaviour
         public string condition;
         public float dist;
         public string movDir;
+        public float distCatheter;
         public string timestamp;
 
-        public dataEntry(float dist, bool movDir, string timestamp, string condition = "")
+        public dataEntry(float dist, float dist2, bool movDir, string timestamp, string condition = "")
         {
             this.dist = dist;
+            this.distCatheter = dist2;
             this.movDir = movDir ? "down" : "up";
             this.timestamp = timestamp;
             this.condition = condition;
@@ -61,11 +64,11 @@ public class DataManager : MonoBehaviour
         int condition = getConditionNumber(isAnimation, isAveraged);
         this.isAnimation = isAnimation;
         data = isAnimation ? condition3 : isAveraged ? condition1 : condition2;
-        data.Add(new dataEntry(0, false, getTime(), "Category " + condition));
+        data.Add(new dataEntry(0, 0,false, getTime(), "Category " + condition));
     }
     public void endDataRecording()
     {
-        data.Add(new dataEntry(0, false, getTime(), "endOfCondition"));
+        data.Add(new dataEntry(0, 0,false, getTime(), "endOfCondition"));
     }
     int getConditionNumber(bool isAnimation, bool isAveraged)
     {
@@ -77,7 +80,7 @@ public class DataManager : MonoBehaviour
         if (OVRInput.GetDown(OVRInput.Button.One))
         {
             if(started)
-                data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation ? catheterTipAnimated.position : catheterTip.position), movementDirDown, getTime()));
+                data.Add(new dataEntry(plane.GetDistanceToPoint(isAnimation ? catheterTipAnimated.position : catheterTip.position), calcDist2(), movementDirDown, getTime()));
             OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
             Invoke("stopVibration", 0.2f);
         }
@@ -115,6 +118,31 @@ public class DataManager : MonoBehaviour
             movementDirDown = catheterTipAnimated.position.y - prevPos < 0;
             prevPos = catheterTipAnimated.position.y;
         }
+    }
+
+    float calcDist2()
+    {
+        RaycastHit hit;
+        if (!isAnimation)
+        {
+            if (Physics.Linecast(catheterTip.position, catheterTop.position, out hit, planeMask))
+                return Vector3.Distance(hit.point, catheterTip.position);
+
+
+            else if (Physics.Linecast(catheterTipAnimated.position, catheterTopAnimated.position, out hit, planeMask))
+                return Vector3.Distance(hit.point, catheterTipAnimated.position);
+
+            return 0;
+
+        }
+        else
+        {
+            movementDirDown = catheterTipAnimated.position.y - prevPos < 0;
+            prevPos = catheterTipAnimated.position.y;
+            return 0;
+
+        }
+
     }
 
 
