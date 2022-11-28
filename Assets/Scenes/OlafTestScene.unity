@@ -411,14 +411,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   catheterTip: {fileID: 1698139090}
-  catheterTop: {fileID: 0}
+  catheterTop: {fileID: 1313623329}
   catheterTipAnimated: {fileID: 2048981851}
-  catheterTopAnimated: {fileID: 0}
+  catheterTopAnimated: {fileID: 809562246}
   catheder: {fileID: 304312397}
-  planeObj: {fileID: 370113699}
+  planeObj: {fileID: 943360525}
   planeMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   startTime: 
 --- !u!4 &87735473
 Transform:
@@ -791,7 +791,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &879989138
 Transform:
   m_ObjectHideFlags: 0
@@ -809,7 +809,7 @@ Transform:
   - {fileID: 1232361935}
   - {fileID: 2004427641}
   m_Father: {fileID: 1042571530}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &879989139
 MonoBehaviour:
@@ -869,7 +869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &943360526
 Transform:
   m_ObjectHideFlags: 0
@@ -878,12 +878,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943360525}
   m_LocalRotation: {x: -0, y: -0.38268343, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: -0.255, z: 0}
-  m_LocalScale: {x: 0.33333328, y: 0.33333334, z: 0.33333328}
+  m_LocalPosition: {x: 0.0275, y: 0.89695, z: -0.3089}
+  m_LocalScale: {x: 0.016666666, y: 0.016666668, z: 0.016666666}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1409824853}
-  m_RootOrder: 1
+  m_Father: {fileID: 1042571530}
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &943360527
 MeshCollider:
@@ -906,7 +906,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943360525}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1473,11 +1473,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1409824853 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 75f816d6f05cf18448ce5f00968a125a, type: 3}
-  m_PrefabInstance: {fileID: 1127025271}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1454947252
 GameObject:
   m_ObjectHideFlags: 0
@@ -2086,7 +2081,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 508094cf0d6243242891d1d928a8cfa6, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 508094cf0d6243242891d1d928a8cfa6, type: 3}
       propertyPath: m_LocalScale.x
@@ -6444,7 +6439,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4418696646170018191, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4418696646326797562, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
       propertyPath: m_IsActive

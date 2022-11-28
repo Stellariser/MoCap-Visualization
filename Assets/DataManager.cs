@@ -18,6 +18,7 @@ public class DataManager : MonoBehaviour
     List<dataEntry> condition3 = new List<dataEntry>(); //animation
     public LayerMask planeMask;
 
+
     public string startTime;
     bool started;
     struct dataEntry
@@ -39,7 +40,7 @@ public class DataManager : MonoBehaviour
         public string getAsString()
         {
             if (condition == "")
-                return dist + ";" + movDir + ";" + timestamp + "; ";
+                return dist + ";" +distCatheter+";" + movDir + ";" + timestamp + "; ";
             else return " ;;" + timestamp + ";" + condition;
         }
     }
@@ -123,25 +124,34 @@ public class DataManager : MonoBehaviour
     float calcDist2()
     {
         RaycastHit hit;
-        if (!isAnimation)
+        Debug.Log("test");
+        if (!isAnimation && Physics.Raycast(catheterTop.position, catheterTip.position - catheterTop.position, out hit, planeMask))
         {
-            if (Physics.Linecast(catheterTip.position, catheterTop.position, out hit, planeMask))
+            if (catheterTip.position.y > planeObj.transform.position.y)
+            {
+                Debug.Log("above plane" +Vector3.Distance(hit.point, catheterTip.position));
                 return Vector3.Distance(hit.point, catheterTip.position);
 
 
-            else if (Physics.Linecast(catheterTipAnimated.position, catheterTopAnimated.position, out hit, planeMask))
-                return Vector3.Distance(hit.point, catheterTipAnimated.position);
-
-            return 0;
-
+            }
+            else
+            {
+                Debug.Log("below plane" + -Vector3.Distance(hit.point, catheterTip.position));
+                return -Vector3.Distance(hit.point, catheterTip.position);
+            }
         }
-        else
+
+        else if (Physics.Linecast(catheterTipAnimated.position, catheterTopAnimated.position, out hit, planeMask))
         {
-            movementDirDown = catheterTipAnimated.position.y - prevPos < 0;
-            prevPos = catheterTipAnimated.position.y;
-            return 0;
-
+            if (catheterTipAnimated.position.y > planeObj.transform.position.y)
+                return Vector3.Distance(hit.point, catheterTipAnimated.position);
+            else
+                return -Vector3.Distance(hit.point, catheterTipAnimated.position);
         }
+
+        return 0;
+
+     
 
     }
 
