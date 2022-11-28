@@ -5509,6 +5509,7 @@ MonoBehaviour:
   camera: {fileID: 2541063311283136972}
   plane: {fileID: 1236990872}
   marker: {fileID: 1042571530}
+  dataManager: {fileID: 87735472}
 --- !u!223 &2541063310928986760
 Canvas:
   m_ObjectHideFlags: 0

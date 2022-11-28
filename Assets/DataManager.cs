@@ -58,6 +58,17 @@ public class DataManager : MonoBehaviour
         }
         InvokeRepeating("calcDir", 1, 1);
     }
+    public void recalibrate()
+    {
+        var filter = planeObj.GetComponent<MeshFilter>();
+        Vector3 normal;
+
+        if (filter && filter.mesh.normals.Length > 0)
+        {
+            normal = filter.transform.TransformDirection(filter.mesh.normals[0]);
+            plane = new Plane(normal, planeObj.transform.position);
+        }
+    }
 
     public void startDataRecording(bool isAnimation, bool isAveraged)
     {
@@ -87,6 +98,8 @@ public class DataManager : MonoBehaviour
         }
         if (OVRInput.GetDown(OVRInput.Button.Four))
         {
+            OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch);
+            Invoke("stopVibration", 0.4f);
             WriteData();
             data = new List<dataEntry>();
             condition1 = new List<dataEntry>(); //smoothed
@@ -141,12 +154,20 @@ public class DataManager : MonoBehaviour
             }
         }
 
-        else if (Physics.Linecast(catheterTipAnimated.position, catheterTopAnimated.position, out hit, planeMask))
+        else if (Physics.Raycast(catheterTopAnimated.position, catheterTipAnimated.position - catheterTopAnimated.position, out hit, planeMask))
         {
             if (catheterTipAnimated.position.y > planeObj.transform.position.y)
+            {
+                Debug.Log("above plane" + Vector3.Distance(hit.point, catheterTipAnimated.position));
                 return Vector3.Distance(hit.point, catheterTipAnimated.position);
+
+
+            }
             else
+            {
+                Debug.Log("below plane" + -Vector3.Distance(hit.point, catheterTipAnimated.position));
                 return -Vector3.Distance(hit.point, catheterTipAnimated.position);
+            }
         }
 
         return 0;
