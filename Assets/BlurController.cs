@@ -9,7 +9,7 @@ public class BlurController : MonoBehaviour
 
     private Vector3 _cameraPosition;
     private bool _blurIsActive = false;
-
+    public Transform marker;
 
     // Start is called before the first frame update
     // void Start()
@@ -20,6 +20,7 @@ public class BlurController : MonoBehaviour
     public void RecalibrateBlurPosition() {
         _cameraPosition = camera.transform.position;
         _blurIsActive = true;
+        marker.position = new Vector3(marker.position.x, Camera.main.transform.position.y-0.5f-0.9097f, marker.position.z);
     }
 
     public void DisableBlur() {
