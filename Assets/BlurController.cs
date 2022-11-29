@@ -21,7 +21,7 @@ public class BlurController : MonoBehaviour
     {
         _cameraPosition = camera.transform.position;
         _blurIsActive = true;
-        marker.position = new Vector3(marker.position.x, Camera.main.transform.position.y - 0.5f - 0.9097f, marker.position.z);
+        marker.position = new Vector3(Camera.main.transform.position.x -0.4f - 0.0275f, Camera.main.transform.position.y - 0.5f - 0.89695f, Camera.main.transform.position.z + 0.3254f);
         dataManager.recalibrate();
     }
 
