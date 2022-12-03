@@ -77,10 +77,14 @@ public class DataManager : MonoBehaviour
         this.isAnimation = isAnimation;
         data = isAnimation ? condition3 : isAveraged ? condition1 : condition2;
         data.Add(new dataEntry(0, 0,false, getTime(), "Category " + condition));
+        InvokeRepeating("calcTruth", 1, 0.2f);
+
     }
     public void endDataRecording()
     {
         data.Add(new dataEntry(0, 0,false, getTime(), "endOfCondition"));
+        Debug.Log("distance " + dist);
+        Debug.Log("angled:" + angledDist);
     }
     int getConditionNumber(bool isAnimation, bool isAveraged)
     {
@@ -175,8 +179,15 @@ public class DataManager : MonoBehaviour
      
 
     }
-
-
+    public float dist;
+    public float angledDist;
+    void calcTruth()
+    {
+        float currDist = plane.GetDistanceToPoint(isAnimation ? catheterTipAnimated.position : catheterTip.position);
+        float currAngledDist = calcDist2();
+        if (currDist < dist) dist = currDist;
+        if (currAngledDist < angledDist) angledDist = currAngledDist;
+    }
     void WriteData()
     {
 
