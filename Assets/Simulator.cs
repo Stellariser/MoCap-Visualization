@@ -23,7 +23,7 @@ public class Simulator : MonoBehaviour
     // the different screens used
     public GameObject ChooseSceneUI, SceneIsOverUI, AreyourRedyUI;
     // call animator for catheter
-    public GameObject catheterAnimatioon;
+    public GameObject catheterAnimatioon; 
     public GameObject tutorialCatheterAnimation;
 
     // Player
@@ -58,7 +58,7 @@ public class Simulator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // tutorialscene, scene1,scene2,scene3
+        // tutorialscene here the listeners for choosing among scenes interface: tutorial,scene1,scene2,scene3
         BetterStreamingAssets.Initialize();
         tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = true;});
         scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; isTutorial = false; }); // Real data
@@ -130,6 +130,8 @@ public class Simulator : MonoBehaviour
             if (pause == false) { pause = true; }
             else { pause = false; }
         }
+        
+        // to fininsh the scene and show scene over screen
         if (loopIndex == stopIndex)
         {
             SceneIsOverUI.SetActive(true);
@@ -139,6 +141,7 @@ public class Simulator : MonoBehaviour
             player.GetComponent<BlurController>().DisableBlur();
             catheder.SetActive(false);
         }
+        
         if (OVRInput.GetDown(OVRInput.Button.Three) && AreyourRedyUI.activeInHierarchy){
             if (!isTutorial)
                 dataManager.startDataRecording(isanimation, applyAverageFilter);
