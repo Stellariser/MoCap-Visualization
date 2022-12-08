@@ -19,16 +19,15 @@ public class Simulator : MonoBehaviour
     public GameObject loopingCanvas;
     bool pause = false; // if the playing of the recording is to be paused.
     // Buttons for the UI
-    public Button tutorialscene, scene1, scene2, scene3, readyButton, sceneOverButton;
+    public Button tutorialscene, scene1, scene2, scene3;
     // the different screens used
     public GameObject ChooseSceneUI, SceneIsOverUI, AreyourRedyUI;
     // call animator for catheter
-    public GameObject catheterAnimatioon; 
+    public GameObject catheterAnimatioon;
     public GameObject tutorialCatheterAnimation;
 
     // Player
     public GameObject player;
-
 
     public DataManager dataManager;
 
@@ -48,30 +47,49 @@ public class Simulator : MonoBehaviour
     public bool applyAverageFilter = false;
 
     // if animation is going on
-    public bool isanimation = false;
+    bool isanimation = false;
 
     // tutorial boolean
-    public bool isTutorial = false;
-
-    //public Array chooseScene [][][]
+    bool isTutorial = false;
 
     // Start is called before the first frame update
     void Start()
     {
         // tutorialscene here the listeners for choosing among scenes interface: tutorial,scene1,scene2,scene3
         BetterStreamingAssets.Initialize();
-        tutorialscene.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = true;});
-        scene1.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = true; isanimation = false; isTutorial = false; }); // Real data
-        scene2.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); applyAverageFilter = false; isanimation = false; isTutorial = false; }); // // augmented data
-        scene3.onClick.AddListener(() => { ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); isanimation = true;isTutorial = false;  }); // fabricated data
-        //chooseStream();
+        tutorialscene.onClick.AddListener(() => { 
+            ChooseSceneUI.SetActive(false); AreyourRedyUI.SetActive(true); 
+            applyAverageFilter = false; 
+            isanimation = false; 
+            isTutorial = true; 
+        });
+        scene1.onClick.AddListener(() => { 
+            ChooseSceneUI.SetActive(false); 
+            AreyourRedyUI.SetActive(true); 
+            applyAverageFilter = true; 
+            isanimation = false; 
+            isTutorial = false; 
+        }); // Real data
+        scene2.onClick.AddListener(() => { 
+            ChooseSceneUI.SetActive(false); 
+            AreyourRedyUI.SetActive(true); 
+            applyAverageFilter = false; 
+            isanimation = false; 
+            isTutorial = false; }); // // augmented data
+        scene3.onClick.AddListener(() => { 
+            ChooseSceneUI.SetActive(false); 
+            AreyourRedyUI.SetActive(true); 
+            isanimation = true; 
+            isTutorial = false; }); // fabricated data
         // Engage interface 
 
 
     }
-    void sceneOver() {
+    void sceneOver()
+    {
         SceneIsOverUI.SetActive(false); ChooseSceneUI.SetActive(true);
-        dataManager.endDataRecording();
+        if(!isTutorial)
+            dataManager.endDataRecording();
     }
     private void startStream(string filepath)
     {
@@ -79,7 +97,7 @@ public class Simulator : MonoBehaviour
         index = fileSize = 0;
         readyToUpdate = false;
 
-      //  slider.onValueChanged.AddListener(delegate { ChangeSpeed(); });
+        //  slider.onValueChanged.AddListener(delegate { ChangeSpeed(); });
 
         timeToCall = Time.fixedTime + timeDelay;
         StreamReader sr = BetterStreamingAssets.OpenText("catheter008.txt"); //read from file
@@ -109,11 +127,10 @@ public class Simulator : MonoBehaviour
 
         //close reader
         sr.Close();
-
-
     }
 
-    public void StopAnimation() {
+    public void StopAnimation()
+    {
         loopIndex = stopIndex;
         catheterAnimatioon.SetActive(false);
         tutorialCatheterAnimation.SetActive(false);
@@ -122,7 +139,6 @@ public class Simulator : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
         // to pause and restart the process
         if (Input.GetKeyUp(KeyCode.X))
         {
@@ -130,7 +146,7 @@ public class Simulator : MonoBehaviour
             if (pause == false) { pause = true; }
             else { pause = false; }
         }
-        
+
         // to fininsh the scene and show scene over screen
         if (loopIndex == stopIndex)
         {
@@ -141,19 +157,25 @@ public class Simulator : MonoBehaviour
             player.GetComponent<BlurController>().DisableBlur();
             catheder.SetActive(false);
         }
-        
-        if (OVRInput.GetDown(OVRInput.Button.Three) && AreyourRedyUI.activeInHierarchy){
+
+        if (OVRInput.GetDown(OVRInput.Button.Three) && AreyourRedyUI.activeInHierarchy)
+        {
             if (!isTutorial)
                 dataManager.startDataRecording(isanimation, applyAverageFilter);
-            player.GetComponent<BlurController>().RecalibrateBlurPosition();           
-            if (isanimation) {
-                AreyourRedyUI.SetActive(false); 
-                catheterAnimatioon.SetActive(true); 
-            } else if (isTutorial) {
+            player.GetComponent<BlurController>().RecalibrateBlurPosition();
+            if (isanimation)
+            {
+                AreyourRedyUI.SetActive(false);
+                catheterAnimatioon.SetActive(true);
+            }
+            else if (isTutorial)
+            {
                 dataManager.startTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 AreyourRedyUI.SetActive(false);
                 tutorialCatheterAnimation.SetActive(true);
-            } else {
+            }
+            else
+            {
                 AreyourRedyUI.SetActive(false);
                 catheder.SetActive(true);
                 startStream(path);
@@ -163,7 +185,6 @@ public class Simulator : MonoBehaviour
 
 
         if (Time.fixedTime >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && pause == false && loopIndex < stopIndex)
-
         {
             //normalize positions
             if (index >= fileSize)
@@ -171,11 +192,11 @@ public class Simulator : MonoBehaviour
 
                 index = 0; //stop simulation if eod is reached
                 loopIndex++;
-                if (loopIndex < stopIndex) {
+                if (loopIndex < stopIndex)
+                {
                     loopingCanvas.SetActive(true);
                     Invoke("disableLoopCanvas", 2);
                 }
-
             }
             Normalize();
             index++;
@@ -208,9 +229,6 @@ public class Simulator : MonoBehaviour
             Vector3 point2 = Vector3.Project(Top - BL, BR - BL) + BL;
             point2Sphere.transform.localPosition = point2;
             catheder.transform.localPosition = point1;
-
-            // Quaternion lookOnLook = Quaternion.LookRotation(parent.transform.TransformPoint(point2) - catheder.transform.position);
-            // catheder.transform.rotation = Quaternion.Slerp(catheder.transform.rotation, lookOnLook, Time.deltaTime);
             catheder.transform.LookAt(parent.transform.TransformPoint(point2));
 
             //map skull
@@ -220,8 +238,6 @@ public class Simulator : MonoBehaviour
             skull.transform.localPosition = skullL;
             skull.transform.LookAt(parent.transform.TransformPoint(skullR));
             skull.transform.localPosition = brow;
-
-
         }
 
     }

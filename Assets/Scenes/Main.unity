@@ -381,62 +381,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4418696645849057714, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
   m_PrefabInstance: {fileID: 4418696645933265347}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &87735471
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 87735473}
-  - component: {fileID: 87735472}
-  m_Layer: 0
-  m_Name: DataManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &87735472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87735471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ca8599cc937aed4a85cbaabe10be225, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  catheterTip: {fileID: 1698139090}
-  catheterTop: {fileID: 1313623329}
-  catheterTipAnimated: {fileID: 2048981851}
-  catheterTopAnimated: {fileID: 809562246}
-  catheder: {fileID: 304312397}
-  planeObj: {fileID: 943360525}
-  planeMask:
-    serializedVersion: 2
-    m_Bits: 128
-  startTime: 
-  dist: 0
-  angledDist: 0
---- !u!4 &87735473
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87735471}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &209706076 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4418696645738245535, guid: bac13d401d250284a9bb88bbf5e869f1, type: 3}
@@ -1090,19 +1034,15 @@ MonoBehaviour:
   scene1: {fileID: 376298384987317947}
   scene2: {fileID: 376298385472529648}
   scene3: {fileID: 376298385695191961}
-  readyButton: {fileID: 0}
-  sceneOverButton: {fileID: 0}
   ChooseSceneUI: {fileID: 376298386220444377}
   SceneIsOverUI: {fileID: 376298385919345202}
   AreyourRedyUI: {fileID: 376298385463859096}
   catheterAnimatioon: {fileID: 879989137}
   tutorialCatheterAnimation: {fileID: 1860709259}
   player: {fileID: 2541063311283136968}
-  dataManager: {fileID: 87735472}
+  dataManager: {fileID: 1406889824}
   slider: {fileID: 0}
   applyAverageFilter: 0
-  isanimation: 0
-  isTutorial: 0
 --- !u!4 &1406889823
 Transform:
   m_ObjectHideFlags: 0
@@ -1134,14 +1074,13 @@ MonoBehaviour:
   catheterTop: {fileID: 1313623329}
   catheterTipAnimated: {fileID: 2048981851}
   catheterTopAnimated: {fileID: 809562246}
-  catheder: {fileID: 304312397}
   planeObj: {fileID: 943360525}
   planeMask:
     serializedVersion: 2
     m_Bits: 128
   startTime: 
-  dist: 0
-  angledDist: 0
+  groundTruthDist: 0
+  groundTruthAngledDist: 0
 --- !u!1 &1454947252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1728,7 +1667,7 @@ Transform:
   m_Children:
   - {fileID: 16996208241491400}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &16996207859990846
 GameObject:
@@ -5019,7 +4958,7 @@ MonoBehaviour:
   camera: {fileID: 2541063311283136972}
   plane: {fileID: 1236990872}
   marker: {fileID: 1042571530}
-  dataManager: {fileID: 87735472}
+  dataManager: {fileID: 1406889824}
 --- !u!223 &2541063310928986760
 Canvas:
   m_ObjectHideFlags: 0
@@ -5180,7 +5119,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2541063311283136968}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b71d1996d67004241a3b69960856ffcb, type: 3}
   m_Name: 
@@ -5331,7 +5270,7 @@ Transform:
   - {fileID: 2541063311282714088}
   - {fileID: 376298385396714079}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2541063311282714088
 Transform:
