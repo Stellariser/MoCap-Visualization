@@ -1,9 +1,8 @@
-# MoCap-Visualization TODO add tite and little description
-Facilitating learning through visualizations of motion-captured data - Advanced Project Course
-
+# Comparison of motion data in regard to the perception of spatiotemporal distances in VR
 
 TODO add our video
-
+## Abstract
+Several previous studies on depth perception have focused on the perception of ego-centric distances in extrapersonal space; however, perception in peripersonal space has only been addressed in part, with contradicting results. This paper explores the accuracy of spatiotemporal distance perception during surgical procedure virtual reality (VR). Using surgical motion capture data a user research was conducted to investigate the differences in depth perception of raw motion capture data, average filtered motion capture data, and synthetic data. Participants used a VR headset to view a catheter entering and exiting a transparent plane, and their impressions were examined via questionnaires during and after the study. This study revealed that there was not a significant difference in perception between the three motion capture data types.
 
 ## Instructions
 Experimenter:
