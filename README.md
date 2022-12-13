@@ -44,7 +44,7 @@ important files of the project can be found in the Assets folder:
   - AnimationScript.cs: handles the animations (looping and stopping)
 - /MoCapData
   - contains recored motion capture data, we use catheter008.txt for the experiment
--/Scripts
-- BlurController.cs: blurs view of participant, if they move
-- DataManager.cs: records the data of the experiment and save it to a file (distance from plane to catheter tip, when the button is pressed)
-- Simulator: handles movement of the catheter through the raw motion capture data, filtered motion capture data or synthesized data
+- /Scripts
+  - BlurController.cs: blurs view of participant, if they move
+  - DataManager.cs: records the data of the experiment and save it to a file (distance from plane to catheter tip, when the button is pressed)
+  - Simulator: handles movement of the catheter through the raw motion capture data, filtered motion capture data or synthesized data
