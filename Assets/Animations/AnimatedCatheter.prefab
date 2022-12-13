@@ -45,7 +45,7 @@ Animator:
   m_GameObject: {fileID: 8387473375929419144}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 191a98e4586e946b9ac652793b88c7a2, type: 2}
+  m_Controller: {fileID: 9100000, guid: 20fa88e8b55ac406c935cebf436e03bf, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -69,6 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLoops: 2
   loopingCanvas: {fileID: 0}
+  simulationManager: {fileID: 0}
 --- !u!1001 &8387473375068466949
 PrefabInstance:
   m_ObjectHideFlags: 0
