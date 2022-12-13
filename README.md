@@ -15,3 +15,11 @@ Participant:
 
 The application needs to be restarted for each participant. 
 The data is saved on the HMD at: `\Quest 2\Internal shared storage\Android\data\com.DefaultCompany.MoCapDemo\files`.
+
+
+## Unity Project
+This project uses Unity 2021.3.3f1. \
+The main scene can be found in /Assets/Scenes/Main.
+
+## Installation on Oculus Quest 2
+The .apk file can be found [here](https://github.com/LariWa/MoCap-Visualization/releases/tag/final). This file has to be installed on the Oculus Quest 2 (e.g. like [this](https://headjack.io/knowledge-base/how-to-easily-sideload-a-vr-app-to-oculus-quest-2/))
