@@ -1,8 +1,7 @@
 # Comparison of motion data in regard to the perception of spatiotemporal distances in VR
 In this repository is a Unity 2021.3.3f1. project created to build a VR application for experimentation in the course DM2799 Advanced Projectcourse in Interactive Media Technology. The application was built for the Oculus Quest 2 headset in November-December 2022. 
 
-[![Video](https://user-images.githubusercontent.com/40071882/207350809-9c5ccbda-de19-49ef-a606-82cd614f951e.png)](https://youtu.be/ix-346xUZFo
-)
+[![Video](https://user-images.githubusercontent.com/40071882/207350809-9c5ccbda-de19-49ef-a606-82cd614f951e.png)](https://www.youtube.com/watch?v=ty6ahtsFfHU)
 ## Abstract
 Several previous studies on depth perception have focused on the perception of ego-centric distances in extrapersonal space; however, perception in peripersonal space has only been addressed in part, with contradicting results. This paper explores the accuracy of spatiotemporal distance perception during surgical procedure virtual reality (VR). Using surgical motion capture data a user research was conducted to investigate the differences in depth perception of raw motion capture data, average filtered motion capture data, and synthetic data. Participants used a VR headset to view a catheter entering and exiting a transparent plane, and their impressions were examined via questionnaires during and after the study. This study revealed that there was not a significant difference in perception between the three motion capture data types.
 
