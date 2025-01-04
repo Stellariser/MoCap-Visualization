@@ -11,6 +11,19 @@ public class dm2 : MonoBehaviour
     public Vector3 minBounds; // 数据最小值
     public Vector3 maxBounds; // 数据最大值
 
+    public Dictionary<Vector3Int, float> voxelDensity = new Dictionary<Vector3Int, float>();
+    public float voxelSize = 0.1f;
+
+    public dm2 dataManager; // 数据管理器
+    public MotionTrajectoryVisualizer trajectoryVisualizer;
+
+    public Dictionary<Vector3Int, int> voxelOverlapDensity = new Dictionary<Vector3Int, int>();
+
+    public int voxelSamplingRate = 2;
+
+    public GridDensityVisualizer gridVisualizer;
+    
+
     [System.Serializable]
     public struct FrameData
     {
@@ -18,6 +31,78 @@ public class dm2 : MonoBehaviour
         public Dictionary<string, Vector3> keypoints; // 每帧所有关键点的坐标
     }
 
+    public void CalculateTemporalDensity()
+    {
+        voxelDensity.Clear();
+        voxelOverlapDensity.Clear(); // 清空重叠密度
+
+        for (int i = 1; i < frames.Count; i++) // 从第2帧开始
+        {
+            var prevFrame = frames[i - 1];
+            var currentFrame = frames[i];
+            float deltaTime = currentFrame.time - prevFrame.time;
+
+            foreach (var key in currentFrame.keypoints.Keys)
+            {
+                if (prevFrame.keypoints.TryGetValue(key, out var prevPos) &&
+                    currentFrame.keypoints.TryGetValue(key, out var currentPos))
+                {
+                    float distance = Vector3.Distance(prevPos, currentPos);
+                    float speed = distance / deltaTime;
+                    Vector3 midpoint = (prevPos + currentPos) / 2;
+
+                    Vector3Int voxelIndex = GetVoxelIndex(midpoint);
+
+                    // 体素采样：仅处理采样率满足条件的体素
+                    if ((voxelIndex.x % voxelSamplingRate == 0) &&
+                        (voxelIndex.y % voxelSamplingRate == 0) &&
+                        (voxelIndex.z % voxelSamplingRate == 0))
+                    {
+                        // 更新时间密度
+                        if (!voxelDensity.ContainsKey(voxelIndex))
+                        {
+                            voxelDensity[voxelIndex] = 0;
+                        }
+                        voxelDensity[voxelIndex] += distance / speed;
+
+                        // 更新重叠密度
+                        if (!voxelOverlapDensity.ContainsKey(voxelIndex))
+                        {
+                            voxelOverlapDensity[voxelIndex] = 0;
+                        }
+                        voxelOverlapDensity[voxelIndex]++;
+                    }
+                }
+            }
+        }
+
+        Debug.Log("Temporal and overlap densities calculated with sampling rate.");
+    }
+
+    private Vector3Int GetVoxelIndex(Vector3 position)
+    {
+        return new Vector3Int(
+            Mathf.FloorToInt((position.x - minBounds.x) / voxelSize),
+            Mathf.FloorToInt((position.y - minBounds.y) / voxelSize),
+            Mathf.FloorToInt((position.z - minBounds.z) / voxelSize)
+        );
+    }
+public void VisualizeDensity()
+    {
+        if (gridVisualizer == null)
+        {
+            Debug.LogError("GridVisualizer is not assigned!");
+            return;
+        }
+
+        // 提取所有点
+        List<Vector3> points = new List<Vector3>();
+        foreach (var frame in frames)
+        {
+            points.AddRange(frame.keypoints.Values);
+        }
+
+    }
     void Start()
     {
         
@@ -26,6 +111,7 @@ public class dm2 : MonoBehaviour
     void Awake() {
         LoadData();
         CalculateBounds();
+        
     }
 
     public void LoadData()
