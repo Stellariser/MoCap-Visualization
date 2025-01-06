@@ -624,7 +624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.08
+      value: -4.68
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1288,6 +1288,7 @@ MonoBehaviour:
   filePath: Assets/MoCapData/catheter002.txt
   filePaths: []
   frames: []
+  filteredFrames: []
   minBounds: {x: 0, y: 0, z: 0}
   maxBounds: {x: 0, y: 0, z: 0}
   voxelSize: 0.5
@@ -1629,13 +1630,15 @@ MonoBehaviour:
   voxelTimeSlider: {fileID: 1947964336}
   voxelSamplingRate: 5
   gridPrefab: {fileID: 1187955355828284481, guid: 4bd5ddfba61577e459fc5d996135f8c4, type: 3}
-  gridSize: 0.1
+  gridSize: 0.03
   cameraMovementSpeed: 5
   cameraVerticalSpeed: 3
   mouseSensitivity: 2
   invertMouseY: 0
-  startFrame: 5000
-  endFrame: 6000
+  visframes: []
+  catheterPrefab: {fileID: 919132149155446097, guid: 79fc248a78c8920489085fc9babc4334, type: 3}
+  catheterContainer: {fileID: 0}
+  catheterScaleFactor: 2
 --- !u!4 &851047657
 Transform:
   m_ObjectHideFlags: 0
@@ -2812,6 +2815,37 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &1506297181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1506297182}
+  m_Layer: 0
+  m_Name: CatheterVisualizer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1506297182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506297181}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.56969714, y: 2.0532076, z: -2.9974985}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1569883321
 GameObject:
   m_ObjectHideFlags: 0
@@ -3422,6 +3456,7 @@ MonoBehaviour:
   - Assets/MoCapData/catheter001.txt
   - Assets/MoCapData/catheter008.txt
   frames: []
+  filteredFrames: []
   minBounds: {x: 0, y: 0, z: 0}
   maxBounds: {x: 0, y: 0, z: 0}
   voxelSize: 0.05

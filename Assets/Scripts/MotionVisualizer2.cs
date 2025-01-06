@@ -7,7 +7,6 @@ using UnityEngine.UI; // 需要引入 UI 命名空间
 public class MotionVisualizer2 : MonoBehaviour
 {
     public dm2 dataManager; // 数据管理器
-
     public GameObject voxelPrefab; // 用于显示体素的预制件
     public Transform voxelContainer; // 体素父对象
     public GameObject keypointPrefab; // 用于显示关键点的小球Prefab
@@ -51,10 +50,91 @@ public class MotionVisualizer2 : MonoBehaviour
     }
     private List<FrameData> filteredFrames = new List<FrameData>(); // 截取后的数据
     private int startFrame = 0; // 起始帧
-    private int endFrame = 0;   // 结束帧
+    private int endFrame = 8000;   // 结束帧
+
+    public List<dm2.FrameData> visframes = new List<dm2.FrameData>();
+
+    public GameObject catheterPrefab;
+
+    public Transform catheterContainer;
+
+    private GameObject currentCatheter;
+
+    public float catheterScaleFactor = 6.0f;
+
+
+
+
+
+
 
 
     
+    public List<dm2.FrameData> GetFramesInRange(int startFrame, int endFrame)
+{
+    // 验证范围
+    if (startFrame < 0 || endFrame >= visframes.Count || startFrame > endFrame)
+    {
+        Debug.LogError($"Invalid range: startFrame={startFrame}, endFrame={endFrame}, totalFrames={visframes.Count}");
+        return new List<dm2.FrameData>(); // 返回空列表
+    }
+
+    // 使用 GetRange 提取范围内的帧数据
+    return visframes.GetRange(startFrame, endFrame - startFrame + 1);
+}
+
+private void AddCatheterCenterToVisframes()
+{
+    Debug.Log("Adding cathetercenter to visframes...");
+    
+    // 遍历每一帧的数据
+    foreach (var frame in visframes)
+    {
+        // 检查是否包含所有必要的关键点
+        if (frame.keypoints.TryGetValue("StickTopLeft", out Vector3 topLeft) &&
+            frame.keypoints.TryGetValue("StickTopRight", out Vector3 topRight) &&
+            frame.keypoints.TryGetValue("StickBottomLeft", out Vector3 bottomLeft) &&
+            frame.keypoints.TryGetValue("StickBottomRight", out Vector3 bottomRight))
+        {
+            // 计算中心点
+            Vector3 topCenter = (topLeft + topRight) / 2;
+            Vector3 bottomCenter = (bottomLeft + bottomRight) / 2;
+            Vector3 catheterCenter = (topCenter + bottomCenter) / 2;
+
+            // 添加到 keypoints 列表中
+            if (!frame.keypoints.ContainsKey("cathetercenter"))
+            {
+                frame.keypoints["cathetercenter"] = catheterCenter;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Missing keypoints for cathetercenter calculation in one or more frames.");
+        }
+    }
+
+    Debug.Log("cathetercenter column added to visframes.");
+}
+
+public void RemoveUnwantedColumns(List<string> columnsToRemove)
+{
+    // 遍历每一帧的数据
+    foreach (var frame in visframes)
+    {
+        // 遍历要删除的列名列表
+        foreach (var column in columnsToRemove)
+        {
+            // 如果当前帧的 keypoints 中存在该列，移除它
+            if (frame.keypoints.ContainsKey(column))
+            {
+                frame.keypoints.Remove(column);
+            }
+        }
+    }
+
+    Debug.Log($"Removed {columnsToRemove.Count} columns from visframes.");
+}
+
     void Start()
 {
     if (dataManager == null || keypointPrefab == null)
@@ -62,6 +142,22 @@ public class MotionVisualizer2 : MonoBehaviour
         Debug.LogError("DataManager or KeypointPrefab is not assigned!");
         return;
     }
+    visframes = dataManager.frames;
+    visframes = GetFramesInRange(startFrame, endFrame);
+    List<string> unwantedColumns = new List<string> { "TopLeft", 
+    "TopRight", 
+    "BottomLeft", 
+    "BottomRight",
+    "Brow",
+    "Tip",
+    "StickTopLeft",
+    "StickTopRight",
+    "StickBottomLeft",
+    "StickBottomRight",
+     };
+    AddCatheterCenterToVisframes();
+    RemoveUnwantedColumns(unwantedColumns);
+    
 
     InitializeKeypoints();
 
@@ -69,7 +165,7 @@ public class MotionVisualizer2 : MonoBehaviour
     if (timeSlider != null)
     {
         timeSlider.minValue = 0;
-        timeSlider.maxValue = dataManager.frames.Count - 1;
+        timeSlider.maxValue = visframes.Count - 1;
         timeSlider.onValueChanged.AddListener(OnSliderValueChanged);
     }
 
@@ -77,7 +173,7 @@ public class MotionVisualizer2 : MonoBehaviour
     if (voxelTimeSlider != null)
     {
         voxelTimeSlider.minValue = 0;
-        voxelTimeSlider.maxValue = dataManager.frames.Count - 1;
+        voxelTimeSlider.maxValue = visframes.Count - 1;
         voxelTimeSlider.onValueChanged.AddListener(OnVoxelSliderValueChanged);
     }
 
@@ -86,7 +182,41 @@ public class MotionVisualizer2 : MonoBehaviour
     VisualizeDensity(0);
 
     CalculateAndVisualizeDensity();
+
+    InitializeCatheter();
 }
+
+private void InitializeCatheter()
+{
+    Debug.Log("Initializing Catheter...");
+
+    if (!visframes[0].keypoints.TryGetValue("cathetercenter", out Vector3 catheterCenter))
+    {
+        Debug.LogError("cathetercenter is missing in the first frame!");
+        return;
+    }
+
+    // 映射 cathetercenter 到场景坐标系
+    Vector3 mappedCenter = MapToScene(catheterCenter);
+
+    // 初始化 Catheter
+    currentCatheter = Instantiate(catheterPrefab, mappedCenter, Quaternion.identity, catheterContainer);
+    if (currentCatheter == null)
+    {
+        Debug.LogError("Failed to instantiate Catheter prefab!");
+        return;
+    }
+
+    // 设置初始缩放
+    currentCatheter.transform.localScale = new Vector3(
+        currentCatheter.transform.localScale.x * catheterScaleFactor,
+        currentCatheter.transform.localScale.y * catheterScaleFactor,
+        currentCatheter.transform.localScale.z * catheterScaleFactor
+    );
+
+    Debug.Log($"Catheter initialized at {mappedCenter}.");
+}
+
 
 public void OnVoxelSliderValueChanged(float value)
 {
@@ -139,7 +269,7 @@ public void CalculateAndVisualizeDensity()
     Vector3 mappedMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
     Vector3 mappedMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-    foreach (var frame in dataManager.frames)
+    foreach (var frame in visframes)
     {
         foreach (var keypoint in frame.keypoints.Values)
         {
@@ -159,7 +289,7 @@ public void CalculateAndVisualizeDensity()
 
     Dictionary<Vector3Int, int> gridDensity = new Dictionary<Vector3Int, int>();
 
-    foreach (var frame in dataManager.frames)
+    foreach (var frame in visframes)
     {
         foreach (var keypoint in frame.keypoints.Values)
         {
@@ -352,6 +482,35 @@ private Color GetEnhancedColor(float normalizedDensity)
 {
     currentFrame = Mathf.RoundToInt(value); // 更新当前帧
     UpdateKeypointsImmediate(); // 立即更新关键点位置
+    UpdateCatheter();
+}
+private void UpdateCatheter()
+{
+    Debug.Log("Updating Catheter...");
+
+    // 验证当前帧索引
+    if (currentFrame < 0 || currentFrame >= visframes.Count)
+    {
+        Debug.LogError($"Invalid frame index: {currentFrame}. Total frames: {visframes.Count}");
+        return;
+    }
+
+    var frameData = visframes[currentFrame];
+
+    // 确保 cathetercenter 存在
+    if (!frameData.keypoints.TryGetValue("cathetercenter", out Vector3 catheterCenter))
+    {
+        Debug.LogWarning("cathetercenter is missing in the current frame!");
+        return;
+    }
+
+    // 映射 cathetercenter 到场景坐标系
+    Vector3 mappedCenter = MapToScene(catheterCenter);
+
+    // 更新 Catheter 的位置
+    currentCatheter.transform.position = mappedCenter;
+
+    Debug.Log($"Catheter updated at {mappedCenter}.");
 }
 
 
@@ -366,9 +525,9 @@ void OnGUI()
 
 public void UpdateKeypointsImmediate()
 {
-    if (currentFrame < 0 || currentFrame >= dataManager.frames.Count) return;
+    if (currentFrame < 0 || currentFrame >= visframes.Count) return;
 
-    var frameData = dataManager.frames[currentFrame];
+    var frameData = visframes[currentFrame];
     foreach (var keypoint in frameData.keypoints)
     {
         if (keypointObjects.ContainsKey(keypoint.Key))
@@ -424,7 +583,7 @@ public void UpdateKeypointsImmediate()
             elapsedTime -= 1f / playbackSpeed;
 
             currentVoxelFrame++;
-            if (currentVoxelFrame >= dataManager.frames.Count)
+            if (currentVoxelFrame >= visframes.Count)
             {
                 currentVoxelFrame = 0;
             }
@@ -542,7 +701,7 @@ private void HandleCameraControls()
 
 public void StepForward()
 {
-    if (currentFrame < dataManager.frames.Count - 1)
+    if (currentFrame < visframes.Count - 1)
     {
         currentFrame++;
         UpdateKeypointsImmediate();
@@ -580,15 +739,16 @@ public void StepBackward()
 
     private void InitializeKeypoints()
 {
-    if (dataManager.frames.Count == 0)
+    if (visframes.Count == 0)
     {
         Debug.LogError("No data loaded in DataManager!");
         return;
     }
 
-    var firstFrame = dataManager.frames[0];
+    var firstFrame = visframes[0];
     foreach (var keypoint in firstFrame.keypoints)
-    {
+    {   
+        Debug.Log($"Column: {keypoint.Key}");
         GameObject keypointObj = Instantiate(keypointPrefab, MapToScene(keypoint.Value), Quaternion.identity);
         keypointObj.name = $"Keypoint_{keypoint.Key}";
         keypointObjects[keypoint.Key] = keypointObj;
@@ -606,14 +766,14 @@ private void UpdateKeypoints()
     {
         elapsedTime = 0f;
 
-        if (currentFrame >= dataManager.frames.Count)
+        if (currentFrame >= visframes.Count)
         {
             isPlaying = false;
             Debug.Log("Playback finished.");
             return;
         }
 
-        var frameData = dataManager.frames[currentFrame];
+        var frameData = visframes[currentFrame];
         foreach (var keypoint in frameData.keypoints)
         {
             if (keypointObjects.ContainsKey(keypoint.Key))
