@@ -616,15 +616,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.907
+      value: 2.75
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.976
+      value: 3.34
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.59
+      value: -4.08
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_LocalRotation.w
@@ -658,6 +658,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7f1361d1ecafb484d91fb7a463670aa9, type: 2}
     - target: {fileID: 919132149155446097, guid: 620f8cd79c0cd8d4cb45d87c90c81909, type: 3}
       propertyPath: m_Name
       value: Skull
@@ -1626,6 +1630,12 @@ MonoBehaviour:
   voxelSamplingRate: 5
   gridPrefab: {fileID: 1187955355828284481, guid: 4bd5ddfba61577e459fc5d996135f8c4, type: 3}
   gridSize: 0.1
+  cameraMovementSpeed: 5
+  cameraVerticalSpeed: 3
+  mouseSensitivity: 2
+  invertMouseY: 0
+  startFrame: 5000
+  endFrame: 6000
 --- !u!4 &851047657
 Transform:
   m_ObjectHideFlags: 0
@@ -2661,7 +2671,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421580077}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.09, z: -12.39}
+  m_LocalPosition: {x: 0, y: 4.09, z: -9.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3403,13 +3413,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   filePath: Assets/MoCapData/catheter007.txt
   filePaths:
-  - Assets/MoCapData/catheter001.txt
   - Assets/MoCapData/catheter002.txt
   - Assets/MoCapData/catheter003.txt
   - Assets/MoCapData/catheter004.txt
   - Assets/MoCapData/catheter005.txt
   - Assets/MoCapData/catheter006.txt
   - Assets/MoCapData/catheter007.txt
+  - Assets/MoCapData/catheter001.txt
   - Assets/MoCapData/catheter008.txt
   frames: []
   minBounds: {x: 0, y: 0, z: 0}

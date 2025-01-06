@@ -34,8 +34,27 @@ public class MotionVisualizer2 : MonoBehaviour
 
     private List<GameObject> gridObjects = new List<GameObject>();
 
-    
+    public float cameraMovementSpeed = 5f; // Camera movement speed
+    public float cameraVerticalSpeed = 3f; // Vertical movement speed
 
+    public float mouseSensitivity = 2f; // Mouse look sensitivity
+    public bool invertMouseY = false; // Option to invert vertical mouse look
+    private float cameraPitch = 0f; // Vertical rotation tracking
+
+    private float cameraYaw = 0f; // Horizontal rotation tracking
+
+    private bool mouseControlEnabled = true;
+    public struct FrameData
+    {
+        public float time; // 时间戳
+        public Dictionary<string, Vector3> keypoints; // 每帧所有关键点的坐标
+    }
+    private List<FrameData> filteredFrames = new List<FrameData>(); // 截取后的数据
+    private int startFrame = 0; // 起始帧
+    private int endFrame = 0;   // 结束帧
+
+
+    
     void Start()
 {
     if (dataManager == null || keypointPrefab == null)
@@ -71,9 +90,11 @@ public class MotionVisualizer2 : MonoBehaviour
 
 public void OnVoxelSliderValueChanged(float value)
 {
-    currentVoxelFrame = Mathf.RoundToInt(value); // 获取当前拖拽条的值
-    VisualizeDensity(currentVoxelFrame); // 显示对应帧索引的体素
+    isPlaying = false; // 暂停播放
+    currentVoxelFrame = Mathf.RoundToInt(value); // 获取滚动条值
+    VisualizeDensity(currentVoxelFrame); // 更新体素显示
 }
+
 
 public void ToggleVisualization()
 {
@@ -329,14 +350,18 @@ private Color GetEnhancedColor(float normalizedDensity)
 
     public void OnSliderValueChanged(float value)
 {
-    currentFrame = Mathf.RoundToInt(value); // 设置当前帧为滑块值
+    currentFrame = Mathf.RoundToInt(value); // 更新当前帧
     UpdateKeypointsImmediate(); // 立即更新关键点位置
 }
 
-public void PlayPause()
+
+
+
+
+void OnGUI()
 {
-    isPlaying = !isPlaying;
-    Debug.Log(isPlaying ? "Playback started." : "Playback paused.");
+    GUI.Label(new Rect(10, 10, 200, 20), $"Playback Speed: {playbackSpeed:F1}");
+    GUI.Label(new Rect(10, 30, 200, 20), isPlaying ? "Status: Playing" : "Status: Paused");
 }
 
 public void UpdateKeypointsImmediate()
@@ -352,15 +377,195 @@ public void UpdateKeypointsImmediate()
         }
     }
 }
+
+
     
 
     void Update()
+{
+    // 按下 Q 键切换鼠标控制状态
+    if (Input.GetKeyDown(KeyCode.Q))
     {
-        if (isPlaying)
+        mouseControlEnabled = !mouseControlEnabled;
+
+        if (!mouseControlEnabled)
         {
-            UpdateKeypoints();
+            Debug.Log("Mouse control disabled. Camera view locked.");
+        }
+        else
+        {
+            Debug.Log("Mouse control enabled.");
         }
     }
+
+    // 鼠标控制逻辑
+    if (mouseControlEnabled)
+    {
+        HandleMouseControls(); // 只有启用鼠标控制时才更新视角
+    }
+
+    // 始终处理拖拽条的逻辑
+    if (timeSlider != null)
+    {
+        if (Mathf.RoundToInt(timeSlider.value) != currentFrame)
+        {
+            currentFrame = Mathf.RoundToInt(timeSlider.value); // 获取滑块值
+            UpdateKeypointsImmediate(); // 更新关键点位置
+        }
+    }
+
+    // 其他播放逻辑
+    if (Input.GetKey(KeyCode.R))
+    {
+        elapsedTime += Time.deltaTime * playbackSpeed;
+
+        if (elapsedTime >= 1f / playbackSpeed)
+        {
+            elapsedTime -= 1f / playbackSpeed;
+
+            currentVoxelFrame++;
+            if (currentVoxelFrame >= dataManager.frames.Count)
+            {
+                currentVoxelFrame = 0;
+            }
+
+            VisualizeDensity(currentVoxelFrame);
+            UpdateKeypointsImmediate();
+
+            if (voxelTimeSlider != null)
+            {
+                voxelTimeSlider.value = currentVoxelFrame;
+            }
+        }
+    }
+
+    if (Input.GetKeyDown(KeyCode.UpArrow))
+    {
+        playbackSpeed = Mathf.Min(playbackSpeed + 0.5f, 10f);
+        Debug.Log($"Playback Speed Increased: {playbackSpeed}");
+    }
+
+    if (Input.GetKeyDown(KeyCode.DownArrow))
+    {
+        playbackSpeed = Mathf.Max(playbackSpeed - 0.5f, 0.5f);
+        Debug.Log($"Playback Speed Decreased: {playbackSpeed}");
+    }
+
+    if (Input.GetKeyDown(KeyCode.V)) ToggleVisualization();
+    if (Input.GetKeyDown(KeyCode.LeftArrow)) StepBackward();
+    if (Input.GetKeyDown(KeyCode.RightArrow)) StepForward();
+
+    // 相机移动逻辑始终启用
+    HandleCameraMovement();
+}
+
+// 重置相机方向为默认朝向
+private void ResetCameraDirection()
+{
+    if (Camera.main != null)
+    {
+        cameraPitch = 0f; // 重置俯仰角
+        cameraYaw = 0f;   // 重置偏航角
+        Camera.main.transform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0f);
+    }
+}
+
+// 鼠标控制逻辑
+private void HandleMouseControls()
+{
+    if (Camera.main != null)
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * (invertMouseY ? -1 : 1);
+
+        cameraYaw += mouseX;
+        cameraPitch -= mouseY;
+        cameraPitch = Mathf.Clamp(cameraPitch, -90f, 90f);
+
+        Quaternion rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0f);
+        Camera.main.transform.rotation = rotation;
+    }
+}
+// 相机移动逻辑（始终启用）
+private void HandleCameraMovement()
+{
+    if (Camera.main != null)
+    {
+        Vector3 moveDirection = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) moveDirection += Camera.main.transform.forward;
+        if (Input.GetKey(KeyCode.S)) moveDirection -= Camera.main.transform.forward;
+        if (Input.GetKey(KeyCode.D)) moveDirection += Camera.main.transform.right;
+        if (Input.GetKey(KeyCode.A)) moveDirection -= Camera.main.transform.right;
+        if (Input.GetKey(KeyCode.Space)) moveDirection += Vector3.up;
+        if (Input.GetKey(KeyCode.LeftShift)) moveDirection -= Vector3.up;
+
+        Camera.main.transform.position += moveDirection.normalized * cameraMovementSpeed * Time.deltaTime;
+    }
+}
+
+
+public void PlayPause()
+{
+    isPlaying = !isPlaying; // 切换播放状态
+    Debug.Log(isPlaying ? "Playback started." : "Playback paused.");
+}
+
+
+
+
+
+private void HandleCameraControls()
+{
+    if (Camera.main != null)
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * (invertMouseY ? -1 : 1);
+
+        cameraYaw += mouseX;
+        cameraPitch -= mouseY;
+        cameraPitch = Mathf.Clamp(cameraPitch, -90f, 90f);
+
+        Quaternion rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0f);
+        Camera.main.transform.rotation = rotation;
+
+        Vector3 moveDirection = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) moveDirection += Camera.main.transform.forward;
+        if (Input.GetKey(KeyCode.S)) moveDirection -= Camera.main.transform.forward;
+        if (Input.GetKey(KeyCode.D)) moveDirection += Camera.main.transform.right;
+        if (Input.GetKey(KeyCode.A)) moveDirection -= Camera.main.transform.right;
+        if (Input.GetKey(KeyCode.Space)) moveDirection += Vector3.up;
+        if (Input.GetKey(KeyCode.LeftShift)) moveDirection -= Vector3.up;
+
+        Camera.main.transform.position += moveDirection.normalized * cameraMovementSpeed * Time.deltaTime;
+    }
+}
+
+public void StepForward()
+{
+    if (currentFrame < dataManager.frames.Count - 1)
+    {
+        currentFrame++;
+        UpdateKeypointsImmediate();
+        if (timeSlider != null)
+        {
+            timeSlider.value = currentFrame;
+        }
+    }
+}
+
+public void StepBackward()
+{
+    if (currentFrame > 0)
+    {
+        currentFrame--;
+        UpdateKeypointsImmediate();
+        if (timeSlider != null)
+        {
+            timeSlider.value = currentFrame;
+        }
+    }
+}
+
 
     public void Play()
     {

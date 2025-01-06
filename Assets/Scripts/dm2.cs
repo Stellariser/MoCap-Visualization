@@ -8,6 +8,8 @@ public class dm2 : MonoBehaviour
 
     public List<string> filePaths = new List<string>(); // 文件路径列表
     public List<FrameData> frames = new List<FrameData>(); // 存储每帧数据
+
+    public List<FrameData> filteredFrames = new List<FrameData>();
     public Vector3 minBounds; // 数据最小值
     public Vector3 maxBounds; // 数据最大值
 
@@ -22,6 +24,8 @@ public class dm2 : MonoBehaviour
     public int voxelSamplingRate = 2;
 
     public GridDensityVisualizer gridVisualizer;
+
+    
     
 
     [System.Serializable]
