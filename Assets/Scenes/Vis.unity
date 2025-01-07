@@ -1291,7 +1291,7 @@ MonoBehaviour:
   filteredFrames: []
   minBounds: {x: 0, y: 0, z: 0}
   maxBounds: {x: 0, y: 0, z: 0}
-  voxelSize: 0.5
+  voxelSize: 0.05
   dataManager: {fileID: 0}
   trajectoryVisualizer: {fileID: 0}
   voxelSamplingRate: 2
@@ -1628,9 +1628,9 @@ MonoBehaviour:
   targetScale: {x: 5, y: 5, z: 5}
   timeSlider: {fileID: 2122644558}
   voxelTimeSlider: {fileID: 1947964336}
-  voxelSamplingRate: 5
+  voxelSamplingRate: 2
   gridPrefab: {fileID: 1187955355828284481, guid: 4bd5ddfba61577e459fc5d996135f8c4, type: 3}
-  gridSize: 0.03
+  gridSize: 0.01
   cameraMovementSpeed: 5
   cameraVerticalSpeed: 3
   mouseSensitivity: 2
@@ -1639,6 +1639,7 @@ MonoBehaviour:
   catheterPrefab: {fileID: 919132149155446097, guid: 79fc248a78c8920489085fc9babc4334, type: 3}
   catheterContainer: {fileID: 0}
   catheterScaleFactor: 2
+  visualizationMode: 0
 --- !u!4 &851047657
 Transform:
   m_ObjectHideFlags: 0
@@ -3459,7 +3460,7 @@ MonoBehaviour:
   filteredFrames: []
   minBounds: {x: 0, y: 0, z: 0}
   maxBounds: {x: 0, y: 0, z: 0}
-  voxelSize: 0.05
+  voxelSize: 0.1
   dataManager: {fileID: 480246796}
   trajectoryVisualizer: {fileID: 0}
   voxelSamplingRate: 2

@@ -116,6 +116,70 @@ private void AddCatheterCenterToVisframes()
     Debug.Log("cathetercenter column added to visframes.");
 }
 
+private void AddSpeedAndAccelerationToVisframes()
+{
+    Debug.Log("Adding speed and acceleration columns to visframes...");
+
+    // 验证数据完整性
+    if (visframes.Count < 2)
+    {
+        Debug.LogError("Not enough frames to calculate speed and acceleration!");
+        return;
+    }
+
+    // 遍历帧，计算速度和加速度
+    for (int i = 0; i < visframes.Count; i++)
+    {
+        var frame = visframes[i];
+
+        // 确保 cathetercenter 存在
+        if (!frame.keypoints.TryGetValue("cathetercenter", out Vector3 currentCenter))
+        {
+            Debug.LogWarning($"Frame {i} missing cathetercenter, skipping speed and acceleration calculation.");
+            continue;
+        }
+
+        // calculation speed
+        Vector3 velocity = Vector3.zero;
+        if (i > 0) 
+        {
+            var previousFrame = visframes[i - 1];
+            if (previousFrame.keypoints.TryGetValue("cathetercenter", out Vector3 previousCenter))
+            {
+                float deltaTime = frame.time - previousFrame.time;
+                if (deltaTime > 0)
+                {
+                    velocity = (currentCenter - previousCenter) / deltaTime;
+                }
+            }
+        }
+
+        // Calculated acceleration
+        Vector3 acceleration = Vector3.zero;
+        if (i > 1) 
+        {
+            var twoFramesAgo = visframes[i - 2];
+            if (twoFramesAgo.keypoints.TryGetValue("cathetercenter", out Vector3 twoFramesAgoCenter))
+            {
+                float deltaTime1 = frame.time - visframes[i - 1].time;
+                float deltaTime2 = visframes[i - 1].time - twoFramesAgo.time;
+                if (deltaTime1 > 0 && deltaTime2 > 0)
+                {
+                    Vector3 velocityPrevious = (currentCenter - visframes[i - 1].keypoints["cathetercenter"]) / deltaTime1;
+                    Vector3 velocityTwoFramesAgo = (visframes[i - 1].keypoints["cathetercenter"] - twoFramesAgoCenter) / deltaTime2;
+                    acceleration = (velocityPrevious - velocityTwoFramesAgo) / ((deltaTime1 + deltaTime2) / 2);
+                }
+            }
+        }
+
+        // 添加速度和加速度到 keypoints
+        frame.keypoints["catheterspeed"] = velocity;
+        frame.keypoints["catheteracceleration"] = acceleration;
+    }
+
+    Debug.Log("Speed and acceleration columns added to visframes.");
+}
+
 public void RemoveUnwantedColumns(List<string> columnsToRemove)
 {
     // 遍历每一帧的数据
@@ -134,9 +198,14 @@ public void RemoveUnwantedColumns(List<string> columnsToRemove)
 
     Debug.Log($"Removed {columnsToRemove.Count} columns from visframes.");
 }
-
-    void Start()
-{
+    float maxSpeed = float.MinValue;
+float minSpeed = float.MaxValue;
+float maxAcceleration = float.MinValue;
+float minAcceleration = float.MaxValue;
+void Start()
+{   
+    // 计算 maxSpeed 和 maxAcceleration
+    
     if (dataManager == null || keypointPrefab == null)
     {
         Debug.LogError("DataManager or KeypointPrefab is not assigned!");
@@ -154,8 +223,35 @@ public void RemoveUnwantedColumns(List<string> columnsToRemove)
     "StickTopRight",
     "StickBottomLeft",
     "StickBottomRight",
+    // "catheterspeed",
+    // "catheteracceleration"
      };
     AddCatheterCenterToVisframes();
+    AddSpeedAndAccelerationToVisframes();
+    foreach (var frame in visframes)
+    {
+        if (frame.keypoints.TryGetValue("catheterspeed", out Vector3 speed))
+        {
+            float speedMagnitude = speed.magnitude;
+
+            if (speedMagnitude > 0) // 过滤掉值为 0 的数据
+            {
+                maxSpeed = Mathf.Max(maxSpeed, speedMagnitude);
+                minSpeed = Mathf.Min(minSpeed, speedMagnitude);
+            }
+        }
+
+        if (frame.keypoints.TryGetValue("catheteracceleration", out Vector3 acceleration))
+        {
+            float accelerationMagnitude = acceleration.magnitude;
+
+            if (accelerationMagnitude > 0) // 过滤掉值为 0 的数据
+            {
+                maxAcceleration = Mathf.Max(maxAcceleration, accelerationMagnitude);
+                minAcceleration = Mathf.Min(minAcceleration, accelerationMagnitude);
+            }
+        }
+    }
     RemoveUnwantedColumns(unwantedColumns);
     
 
@@ -251,8 +347,27 @@ private void ClearVisualization()
     gridObjects.Clear();
 }
 
-public void CalculateAndVisualizeDensity()
+
+public enum VisualizationMode
 {
+    Density,
+    Speed,
+    Acceleration
+}
+
+public VisualizationMode visualizationMode = VisualizationMode.Density;
+
+public void CalculateAndVisualizeDensity()
+
+
+{
+
+    foreach (Transform child in voxelContainer)
+    {
+        Destroy(child.gameObject);
+    }
+    gridObjects.Clear();
+    
     if (gridPrefab == null)
     {
         Debug.LogError("GridPrefab is not assigned!");
@@ -271,9 +386,9 @@ public void CalculateAndVisualizeDensity()
 
     foreach (var frame in visframes)
     {
-        foreach (var keypoint in frame.keypoints.Values)
+        if (frame.keypoints.TryGetValue("cathetercenter", out Vector3 catheterCenter))
         {
-            Vector3 mappedPosition = MapToScene(keypoint);
+            Vector3 mappedPosition = MapToScene(catheterCenter);
             mappedMin = Vector3.Min(mappedMin, mappedPosition);
             mappedMax = Vector3.Max(mappedMax, mappedPosition);
         }
@@ -291,9 +406,9 @@ public void CalculateAndVisualizeDensity()
 
     foreach (var frame in visframes)
     {
-        foreach (var keypoint in frame.keypoints.Values)
+        if (frame.keypoints.TryGetValue("cathetercenter", out Vector3 catheterCenter))
         {
-            Vector3 mappedPosition = MapToScene(keypoint);
+            Vector3 mappedPosition = MapToScene(catheterCenter);
             Vector3Int gridIndex = new Vector3Int(
                 Mathf.FloorToInt((mappedPosition.x - mappedMin.x) / gridSize),
                 Mathf.FloorToInt((mappedPosition.y - mappedMin.y) / gridSize),
@@ -323,74 +438,126 @@ public void CalculateAndVisualizeDensity()
     float logMaxDensity = Mathf.Log10(maxDensity + 1);
     float logMinDensity = Mathf.Log10(minDensity + 1);
 
+    
+
     foreach (var kvp in gridDensity)
-    {
-        Vector3Int index = kvp.Key;
-        int density = kvp.Value;
 
-        float logDensity = Mathf.Log10(density + 1);
-        float normalizedDensity = (logDensity - logMinDensity) / (logMaxDensity - logMinDensity);
+{
 
-        Vector3 gridCenter = new Vector3(
-            mappedMin.x + index.x * gridSize + gridSize / 2,
-            mappedMin.y + index.y * gridSize + gridSize / 2,
-            mappedMin.z + index.z * gridSize + gridSize / 2
-        );
 
-        GameObject grid = Instantiate(gridPrefab, gridCenter, Quaternion.identity, voxelContainer);
-        grid.transform.localScale = Vector3.one * gridSize;
 
-        Renderer renderer = grid.GetComponent<Renderer>();
-        if (renderer != null)
+    Vector3Int index = kvp.Key;
+    int density = kvp.Value;
+
+    float valueToVisualize = 0f; // 用于存储当前可视化值
+    float normalizedValue = 0f; // 用于归一化可视化值
+
+    Debug.Log($"Mode: {visualizationMode}, Value: {valueToVisualize}, Normalized: {normalizedValue}");
+
+
+    switch (visualizationMode)
+{
+    case VisualizationMode.Density:
+        float logDensity = Mathf.Log10(density + 1); // 对数变换
+        normalizedValue = (logDensity - logMinDensity) / (logMaxDensity - logMinDensity);
+        Debug.Log($"Density: {density}, Normalized: {normalizedValue}");
+        break;
+
+    case VisualizationMode.Speed:
+        if (visframes[index.z].keypoints.TryGetValue("catheterspeed", out Vector3 speed))
         {
-            Color color = Color.Lerp(Color.blue, Color.red, normalizedDensity);
-        float enhancedDensity = Mathf.Pow(normalizedDensity, 0.7f); // Adjust exponent to control color spread
+            valueToVisualize = speed.magnitude;
 
-        if (enhancedDensity < 0.33f)
+            // 对速度进行对数变换
+            float logSpeed = Mathf.Log10(valueToVisualize + 1); // 避免对 0 取对数
+            float logSpeedMin = Mathf.Log10(minSpeed + 1);
+            float logSpeedMax = Mathf.Log10(maxSpeed + 1);
+
+            // 使用对数范围进行归一化
+            normalizedValue = (logSpeed - logSpeedMin) / (logSpeedMax - logSpeedMin);
+            normalizedValue = Mathf.Clamp01(normalizedValue);
+            Debug.Log($"Speed: {valueToVisualize}, LogSpeed: {logSpeed}, Normalized: {normalizedValue}");
+        }
+        break;
+
+    case VisualizationMode.Acceleration:
+        if (visframes[index.z].keypoints.TryGetValue("catheteracceleration", out Vector3 acceleration))
+        {
+            valueToVisualize = acceleration.magnitude;
+
+            // 对加速度进行对数变换
+            float logAccel = Mathf.Log10(valueToVisualize + 1); // 避免对 0 取对数
+            float logAccelMin = Mathf.Log10(minAcceleration + 1);
+            float logAccelMax = Mathf.Log10(maxAcceleration + 1);
+
+            // 使用对数范围进行归一化
+            normalizedValue = (logAccel - logAccelMin) / (logAccelMax - logAccelMin);
+            normalizedValue = Mathf.Clamp01(normalizedValue);
+            Debug.Log($"Acceleration: {valueToVisualize}, LogAccel: {logAccel}, Normalized: {normalizedValue}");
+        }
+        break;
+}
+
+
+    normalizedValue = Mathf.Pow(normalizedValue, 0.7f);
+
+
+    Vector3 gridCenter = new Vector3(
+        mappedMin.x + index.x * gridSize + gridSize / 2,
+        mappedMin.y + index.y * gridSize + gridSize / 2,
+        mappedMin.z + index.z * gridSize + gridSize / 2
+    );
+
+    GameObject grid = Instantiate(gridPrefab, gridCenter, Quaternion.identity, voxelContainer);
+    grid.transform.localScale = Vector3.one * gridSize;
+
+    Renderer renderer = grid.GetComponent<Renderer>();
+    if (renderer != null)
+    {
+        Color color = Color.Lerp(Color.blue, Color.red, normalizedValue);
+        float enhancedValue = Mathf.Pow(normalizedValue, 0.7f); // 增强颜色分布
+
+        if (enhancedValue < 0.33f)
         {
             // Cool colors: deep blue to vibrant green
-            color = Color.Lerp(Color.blue, Color.green, enhancedDensity * 3f);
-            // Increase saturation for low-mid densities
+            color = Color.Lerp(Color.blue, Color.green, enhancedValue * 3f);
             color = Color.Lerp(color, Color.green * 1.2f, 0.3f);
         }
-        else if (enhancedDensity < 0.66f)
+        else if (enhancedValue < 0.66f)
         {
             // Warm colors: green to saturated orange
-            Color saturatedOrange = new Color(1f, 0.6f, 0f, 1f); // More vibrant orange
-            color = Color.Lerp(Color.green, saturatedOrange, (enhancedDensity - 0.33f) * 3f);
-            // Further increase saturation and brightness for mid densities
+            Color saturatedOrange = new Color(1f, 0.6f, 0f, 1f);
+            color = Color.Lerp(Color.green, saturatedOrange, (enhancedValue - 0.33f) * 3f);
             color = Color.Lerp(color, saturatedOrange * 1.3f, 0.4f);
         }
         else
         {
             // Hot colors: orange to deep red
             Color saturatedOrange = new Color(1f, 0.6f, 0f, 1f);
-            color = Color.Lerp(saturatedOrange, Color.red, (enhancedDensity - 0.66f) * 3f);
-            // Increase intensity for high densities
+            color = Color.Lerp(saturatedOrange, Color.red, (enhancedValue - 0.66f) * 3f);
             color = Color.Lerp(color, Color.red * 1.2f, 0.3f);
         }
-        
-        // Adjust transparency based on the enhanced density
-        color.a = Mathf.Lerp(0.2f, 1f, enhancedDensity);
+
+        color.a = Mathf.Lerp(0.2f, 1f, enhancedValue);
+
+        renderer.material.color = color;
+
+        Debug.Log($"Grid Index: {index}, Color: {color}");
 
 
-            color.a = Mathf.Lerp(0.2f, 1f, normalizedDensity);
-
-            renderer.material.color = color;
-
-            var material = renderer.material;
-            material.SetFloat("_Mode", 3);
-            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            material.SetInt("_ZWrite", 0);
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.EnableKeyword("_ALPHABLEND_ON");
-            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            material.renderQueue = 3000;
-        }
-
-        gridObjects.Add(grid); // 将网格对象添加到列表中
+        var material = renderer.material;
+        material.SetFloat("_Mode", 3);
+        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetInt("_ZWrite", 0);
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.EnableKeyword("_ALPHABLEND_ON");
+        material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        material.renderQueue = 3000;
     }
+
+    gridObjects.Add(grid); // 将网格对象添加到列表中
+}
 }
 
 
@@ -542,6 +709,25 @@ public void UpdateKeypointsImmediate()
 
     void Update()
 {
+
+    if (Input.GetKeyDown(KeyCode.B))
+    {
+        visualizationMode = VisualizationMode.Density;
+        Debug.Log("Switched to Density visualization.");
+        CalculateAndVisualizeDensity();
+    }
+    else if (Input.GetKeyDown(KeyCode.N))
+    {
+        visualizationMode = VisualizationMode.Speed;
+        Debug.Log("Switched to Speed visualization.");
+        CalculateAndVisualizeDensity();
+    }
+    else if (Input.GetKeyDown(KeyCode.M))
+    {
+        visualizationMode = VisualizationMode.Acceleration;
+        Debug.Log("Switched to Acceleration visualization.");
+        CalculateAndVisualizeDensity();
+    }
     // 按下 Q 键切换鼠标控制状态
     if (Input.GetKeyDown(KeyCode.Q))
     {
